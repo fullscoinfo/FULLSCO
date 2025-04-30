@@ -8,7 +8,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { slugify } from "@/lib/utils";
-import Sidebar from "@/components/admin/sidebar";
+import Sidebar from "@/components/admin/new-sidebar";
 import {
   Form,
   FormControl,

@@ -9,7 +9,7 @@ import { queryClient, apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { slugify, cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
-import Sidebar from "@/components/admin/sidebar";
+import Sidebar from "@/components/admin/new-sidebar";
 import { Menu } from "lucide-react";
 import {
   Form,

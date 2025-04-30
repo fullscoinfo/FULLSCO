@@ -5,7 +5,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { queryClient } from "@/lib/queryClient";
 import { apiRequest } from "@/lib/queryClient";
 import { formatDate, cn } from "@/lib/utils";
-import Sidebar from "@/components/admin/sidebar";
+import Sidebar from "@/components/admin/new-sidebar";
 import {
   Table,
   TableBody,
