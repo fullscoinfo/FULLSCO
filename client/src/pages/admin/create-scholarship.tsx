@@ -228,7 +228,7 @@ const CreateScholarship = () => {
                         <FormItem>
                           <FormLabel>الدولة</FormLabel>
                           <Select
-                            onValueChange={field.onChange}
+                            onValueChange={(value) => field.onChange(parseInt(value, 10))}
                             defaultValue={field.value?.toString()}
                           >
                             <FormControl>
@@ -259,7 +259,7 @@ const CreateScholarship = () => {
                         <FormItem>
                           <FormLabel>المستوى الدراسي</FormLabel>
                           <Select
-                            onValueChange={field.onChange}
+                            onValueChange={(value) => field.onChange(parseInt(value, 10))}
                             defaultValue={field.value?.toString()}
                           >
                             <FormControl>
