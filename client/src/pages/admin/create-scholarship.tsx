@@ -1,22 +1,22 @@
 import { useEffect } from "react";
-import { useLocation } from "wouter";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useQuery, useMutation } from "@tanstack/react-query";
-import { z } from "zod";
+import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useAuth } from "@/hooks/use-auth";
-import { queryClient, apiRequest } from "@/lib/queryClient";
+import { useLocation } from "wouter";
 import { useToast } from "@/hooks/use-toast";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { slugify } from "@/lib/utils";
 import Sidebar from "@/components/admin/sidebar";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
-  FormDescription,
 } from "@/components/ui/form";
 import {
   Select,
@@ -220,7 +220,7 @@ const CreateScholarship = () => {
                       <FormItem>
                         <FormLabel>عنوان المنحة</FormLabel>
                         <FormControl>
-                          <Input placeholder="أدخل عنوان المنحة الدراسية" {...field} />
+                          <SafeInput placeholder="أدخل عنوان المنحة الدراسية" {...field} />
                         </FormControl>
                         <FormDescription>
                           أدخل عنوانًا وصفيًا للمنحة الدراسية.
@@ -332,7 +332,7 @@ const CreateScholarship = () => {
                       <FormItem>
                         <FormLabel>الوصف</FormLabel>
                         <FormControl>
-                          <Textarea
+                          <SafeTextarea
                             placeholder="وصف تفصيلي للمنحة الدراسية"
                             className="min-h-32"
                             {...field}
@@ -349,12 +349,12 @@ const CreateScholarship = () => {
                       name="deadline"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>الموعد النهائي للتقديم</FormLabel>
+                          <FormLabel>الموعد النهائي</FormLabel>
                           <FormControl>
-                            <Input placeholder="مثال: 30 يونيو، 2025" {...field} value={field.value || ''} />
+                            <SafeInput placeholder="أدخل الموعد النهائي للتقديم" {...field} />
                           </FormControl>
                           <FormDescription>
-                            أدخل الموعد النهائي لتقديم الطلبات.
+                            أدخل التاريخ أو الفترة المحددة للتقديم.
                           </FormDescription>
                           <FormMessage />
                         </FormItem>
@@ -368,57 +368,58 @@ const CreateScholarship = () => {
                         <FormItem>
                           <FormLabel>قيمة المنحة</FormLabel>
                           <FormControl>
-                            <Input placeholder="مثال: 10,000 دولار/سنة" {...field} value={field.value || ''} />
+                            <SafeInput placeholder="مثال: $10,000 سنوياً" {...field} />
                           </FormControl>
+                          <FormDescription>
+                            أدخل المبلغ المقدم في المنحة، أو وصفاً لما تغطيه.
+                          </FormDescription>
                           <FormMessage />
                         </FormItem>
                       )}
                     />
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <FormField
-                      control={form.control}
-                      name="isFeatured"
-                      render={({ field }) => (
-                        <FormItem className="flex flex-row items-start space-x-3 space-x-reverse space-y-0 rounded-md border border-border p-4">
-                          <FormControl>
-                            <Checkbox
-                              checked={field.value}
-                              onCheckedChange={field.onChange}
-                            />
-                          </FormControl>
-                          <div className="space-y-1 leading-none mr-3">
-                            <FormLabel>منحة مميزة</FormLabel>
-                            <FormDescription>
-                              المنح المميزة تظهر بشكل بارز في الصفحة الرئيسية.
-                            </FormDescription>
-                          </div>
-                        </FormItem>
-                      )}
-                    />
+                  <FormField
+                    control={form.control}
+                    name="isFeatured"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-row items-start space-x-3 space-x-reverse space-y-0 rounded-md border border-border p-4">
+                        <FormControl>
+                          <SafeCheckbox
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                          />
+                        </FormControl>
+                        <div className="space-y-1 leading-none">
+                          <FormLabel>منحة مميزة</FormLabel>
+                          <FormDescription>
+                            سيتم عرض هذه المنحة في قسم "المنح المميزة" على الصفحة الرئيسية.
+                          </FormDescription>
+                        </div>
+                      </FormItem>
+                    )}
+                  />
 
-                    <FormField
-                      control={form.control}
-                      name="isFullyFunded"
-                      render={({ field }) => (
-                        <FormItem className="flex flex-row items-start space-x-3 space-x-reverse space-y-0 rounded-md border border-border p-4">
-                          <FormControl>
-                            <Checkbox
-                              checked={field.value}
-                              onCheckedChange={field.onChange}
-                            />
-                          </FormControl>
-                          <div className="space-y-1 leading-none mr-3">
-                            <FormLabel>منحة ممولة بالكامل</FormLabel>
-                            <FormDescription>
-                              ضع علامة على هذه المنحة إذا كانت ممولة بالكامل.
-                            </FormDescription>
-                          </div>
-                        </FormItem>
-                      )}
-                    />
-                  </div>
+                  <FormField
+                    control={form.control}
+                    name="isFullyFunded"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-row items-start space-x-3 space-x-reverse space-y-0 rounded-md border border-border p-4">
+                        <FormControl>
+                          <SafeCheckbox
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                          />
+                        </FormControl>
+                        <div className="space-y-1 leading-none">
+                          <FormLabel>منحة ممولة بالكامل</FormLabel>
+                          <FormDescription>
+                            حدد هذا الخيار إذا كانت المنحة تغطي جميع التكاليف.
+                          </FormDescription>
+                        </div>
+                      </FormItem>
+                    )}
+                  />
 
                   <FormField
                     control={form.control}
@@ -427,7 +428,7 @@ const CreateScholarship = () => {
                       <FormItem>
                         <FormLabel>متطلبات المنحة</FormLabel>
                         <FormControl>
-                          <Textarea
+                          <SafeTextarea
                             placeholder="شروط الأهلية ومعايير التقديم"
                             className="min-h-24"
                             {...field}
@@ -445,10 +446,10 @@ const CreateScholarship = () => {
                       <FormItem>
                         <FormLabel>رابط التقديم</FormLabel>
                         <FormControl>
-                          <Input placeholder="https://..." {...field} dir="ltr" />
+                          <SafeInput placeholder="https://..." {...field} dir="ltr" />
                         </FormControl>
                         <FormDescription>
-                          عنوان URL حيث يمكن للطلاب التقديم على هذه المنحة.
+                          أدخل الرابط الرسمي للتقديم على المنحة.
                         </FormDescription>
                         <FormMessage />
                       </FormItem>
@@ -460,33 +461,25 @@ const CreateScholarship = () => {
                     name="imageUrl"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Image URL</FormLabel>
+                        <FormLabel>رابط الصورة</FormLabel>
                         <FormControl>
-                          <Input placeholder="https://..." {...field} />
+                          <SafeInput placeholder="https://..." {...field} />
                         </FormControl>
                         <FormDescription>
-                          URL of an image representing this scholarship.
+                          أدخل رابط لصورة تمثل هذه المنحة.
                         </FormDescription>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
 
-                  <div className="flex justify-end space-x-2">
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={() => navigate("/admin/scholarships")}
-                    >
-                      Cancel
-                    </Button>
-                    <Button
-                      type="submit"
-                      disabled={createMutation.isPending}
-                    >
-                      {createMutation.isPending ? "جاري الإنشاء..." : "إنشاء المنحة"}
-                    </Button>
-                  </div>
+                  <Button
+                    type="submit"
+                    className="w-full md:w-auto"
+                    disabled={createMutation.isPending}
+                  >
+                    {createMutation.isPending ? "جاري الإنشاء..." : "إنشاء المنحة"}
+                  </Button>
                 </form>
               </Form>
             </CardContent>

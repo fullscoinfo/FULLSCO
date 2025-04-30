@@ -24,6 +24,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
+import { SafeCheckbox } from "@/components/ui/safe-checkbox";
+import { SafeInput } from "@/components/ui/safe-input";
+import { SafeTextarea } from "@/components/ui/safe-textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowLeft } from "lucide-react";
 import { insertPostSchema } from "@shared/schema";
@@ -205,7 +208,7 @@ const CreatePost = () => {
                       <FormItem>
                         <FormLabel>Title</FormLabel>
                         <FormControl>
-                          <Input placeholder="Post title" {...field} />
+                          <SafeInput placeholder="Post title" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -219,7 +222,7 @@ const CreatePost = () => {
                       <FormItem>
                         <FormLabel>Content</FormLabel>
                         <FormControl>
-                          <Textarea
+                          <SafeTextarea
                             placeholder="Post content"
                             className="min-h-64"
                             {...field}
@@ -241,7 +244,7 @@ const CreatePost = () => {
                       <FormItem>
                         <FormLabel>Excerpt</FormLabel>
                         <FormControl>
-                          <Textarea
+                          <SafeTextarea
                             placeholder="Short description of the post (will be auto-generated if left empty)"
                             className="min-h-20"
                             {...field}
@@ -262,7 +265,7 @@ const CreatePost = () => {
                       <FormItem>
                         <FormLabel>Featured Image URL</FormLabel>
                         <FormControl>
-                          <Input placeholder="https://..." {...field} />
+                          <SafeInput placeholder="https://..." {...field} />
                         </FormControl>
                         <FormDescription>
                           URL of an image to be used as the featured image for this post.
@@ -278,7 +281,7 @@ const CreatePost = () => {
                     render={({ field }) => (
                       <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
                         <FormControl>
-                          <Checkbox
+                          <SafeCheckbox
                             checked={field.value}
                             onCheckedChange={field.onChange}
                           />
@@ -304,7 +307,7 @@ const CreatePost = () => {
                           <FormItem>
                             <FormLabel>Meta Title</FormLabel>
                             <FormControl>
-                              <Input
+                              <SafeInput
                                 placeholder="SEO title (defaults to post title if left empty)"
                                 {...field}
                               />
@@ -324,7 +327,7 @@ const CreatePost = () => {
                           <FormItem>
                             <FormLabel>Meta Description</FormLabel>
                             <FormControl>
-                              <Textarea
+                              <SafeTextarea
                                 placeholder="SEO description (defaults to excerpt if left empty)"
                                 className="min-h-20"
                                 {...field}
