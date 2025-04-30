@@ -95,6 +95,13 @@ export interface IStorage {
   // Site settings operations
   getSiteSettings(): Promise<SiteSetting | undefined>;
   updateSiteSettings(settings: Partial<InsertSiteSetting>): Promise<SiteSetting>;
+
+  // Analytics operations
+  getVisitStats(period?: string): Promise<any>;
+  getPostStats(): Promise<any>;
+  getScholarshipStats(): Promise<any>;
+  getTrafficSources(): Promise<any>;
+  getTopContent(type?: string, limit?: number): Promise<any>;
 }
 
 export class MemStorage implements IStorage {
