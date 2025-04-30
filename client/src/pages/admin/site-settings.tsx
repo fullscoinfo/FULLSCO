@@ -44,9 +44,9 @@ const siteSettingsSchema = z.object({
   linkedin: z.string().url('يجب أن يكون رابط صالح').optional().or(z.literal('')),
   
   // إعدادات الألوان
-  primaryColor: z.string().regex(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/, 'يجب أن يكون لون صالح (هيكس)').optional().or(z.literal('')),
-  secondaryColor: z.string().regex(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/, 'يجب أن يكون لون صالح (هيكس)').optional().or(z.literal('')),
-  accentColor: z.string().regex(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/, 'يجب أن يكون لون صالح (هيكس)').optional().or(z.literal('')),
+  primaryColor: z.string().regex(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/, 'يجب أن يكون لون صالح (هيكس)').optional(),
+  secondaryColor: z.string().regex(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/, 'يجب أن يكون لون صالح (هيكس)').optional(),
+  accentColor: z.string().regex(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/, 'يجب أن يكون لون صالح (هيكس)').optional(),
   
   // إعدادات أخرى
   enableDarkMode: z.boolean().default(true),
@@ -61,7 +61,7 @@ type SiteSettingsFormValues = z.infer<typeof siteSettingsSchema>;
 
 // واجهة لإعدادات الموقع
 interface SiteSettings {
-  id: string;
+  id: number;
   siteName: string;
   siteTagline?: string;
   siteDescription?: string;
@@ -123,17 +123,18 @@ export default function SiteSettingsPage() {
   // تحديث إعدادات الموقع
   const updateMutation = useMutation({
     mutationFn: async (updatedSettings: SiteSettingsFormValues) => {
-      // سيتم إضافة نقطة نهاية API لاحقًا
-      // const response = await fetch('/api/site-settings', {
-      //   method: 'PUT',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify(updatedSettings),
-      // });
-      // if (!response.ok) throw new Error('فشل في تحديث إعدادات الموقع');
-      // return response.json();
-      
-      // محاكاة استجابة API
-      return { id: 'settings', ...updatedSettings } as SiteSettings;
+      try {
+        const response = await fetch('/api/site-settings', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(updatedSettings),
+        });
+        if (!response.ok) throw new Error('فشل في تحديث إعدادات الموقع');
+        return response.json();
+      } catch (error) {
+        console.error('Error updating site settings:', error);
+        throw error;
+      }
     },
     onSuccess: (updatedSettings) => {
       queryClient.setQueryData(['/api/site-settings'], updatedSettings);
@@ -395,13 +396,13 @@ export default function SiteSettingsPage() {
                             render={({ field }) => (
                               <FormItem>
                                 <FormLabel>اللغة الافتراضية</FormLabel>
-                                <Select
+                                <Select 
+                                  value={field.value} 
                                   onValueChange={field.onChange}
-                                  defaultValue={field.value}
                                 >
                                   <FormControl>
                                     <SelectTrigger>
-                                      <SelectValue placeholder="اختر اللغة الافتراضية" />
+                                      <SelectValue placeholder="اختر اللغة" />
                                     </SelectTrigger>
                                   </FormControl>
                                   <SelectContent>
@@ -409,9 +410,6 @@ export default function SiteSettingsPage() {
                                     <SelectItem value="en">الإنجليزية</SelectItem>
                                   </SelectContent>
                                 </Select>
-                                <FormDescription>
-                                  اللغة الافتراضية للموقع
-                                </FormDescription>
                                 <FormMessage />
                               </FormItem>
                             )}
@@ -420,11 +418,11 @@ export default function SiteSettingsPage() {
                             control={form.control}
                             name="rtlDirection"
                             render={({ field }) => (
-                              <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3">
-                                <div className="space-y-0.5">
-                                  <FormLabel>اتجاه RTL</FormLabel>
+                              <FormItem className="flex flex-row items-center justify-between p-3 border rounded-md">
+                                <div>
+                                  <FormLabel className="mb-0">اتجاه RTL</FormLabel>
                                   <FormDescription>
-                                    تمكين اتجاه RTL (من اليمين إلى اليسار)
+                                    تمكين الكتابة من اليمين لليسار
                                   </FormDescription>
                                 </div>
                                 <FormControl>
@@ -433,7 +431,6 @@ export default function SiteSettingsPage() {
                                     onCheckedChange={field.onChange}
                                   />
                                 </FormControl>
-                                <FormMessage />
                               </FormItem>
                             )}
                           />
@@ -441,11 +438,11 @@ export default function SiteSettingsPage() {
                             control={form.control}
                             name="enableDarkMode"
                             render={({ field }) => (
-                              <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3">
-                                <div className="space-y-0.5">
-                                  <FormLabel>الوضع الداكن</FormLabel>
+                              <FormItem className="flex flex-row items-center justify-between p-3 border rounded-md">
+                                <div>
+                                  <FormLabel className="mb-0">الوضع الداكن</FormLabel>
                                   <FormDescription>
-                                    تمكين خيار الوضع الداكن في الموقع
+                                    إتاحة الوضع الداكن للموقع
                                   </FormDescription>
                                 </div>
                                 <FormControl>
@@ -454,51 +451,6 @@ export default function SiteSettingsPage() {
                                     onCheckedChange={field.onChange}
                                   />
                                 </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                        </div>
-                        <div className="grid md:grid-cols-2 gap-4">
-                          <FormField
-                            control={form.control}
-                            name="enableNewsletter"
-                            render={({ field }) => (
-                              <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3">
-                                <div className="space-y-0.5">
-                                  <FormLabel>النشرة البريدية</FormLabel>
-                                  <FormDescription>
-                                    عرض نموذج الاشتراك في النشرة البريدية
-                                  </FormDescription>
-                                </div>
-                                <FormControl>
-                                  <Switch
-                                    checked={field.value}
-                                    onCheckedChange={field.onChange}
-                                  />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          <FormField
-                            control={form.control}
-                            name="enableScholarshipSearch"
-                            render={({ field }) => (
-                              <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3">
-                                <div className="space-y-0.5">
-                                  <FormLabel>البحث عن المنح</FormLabel>
-                                  <FormDescription>
-                                    تمكين خاصية البحث عن المنح الدراسية
-                                  </FormDescription>
-                                </div>
-                                <FormControl>
-                                  <Switch
-                                    checked={field.value}
-                                    onCheckedChange={field.onChange}
-                                  />
-                                </FormControl>
-                                <FormMessage />
                               </FormItem>
                             )}
                           />
@@ -511,39 +463,40 @@ export default function SiteSettingsPage() {
                   <TabsContent value="appearance">
                     <Card>
                       <CardHeader>
-                        <CardTitle>المظهر والألوان</CardTitle>
+                        <CardTitle>إعدادات المظهر والألوان</CardTitle>
                         <CardDescription>
-                          إعدادات مظهر الموقع وتخصيص الألوان والشعارات
+                          تخصيص مظهر الموقع والشعارات والألوان
                         </CardDescription>
                       </CardHeader>
                       <CardContent className="space-y-4">
-                        <div className="grid md:grid-cols-2 gap-4">
+                        <div className="grid md:grid-cols-3 gap-4">
+                          <FormField
+                            control={form.control}
+                            name="favicon"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>أيقونة الموقع (Favicon)</FormLabel>
+                                <FormControl>
+                                  <Input {...field} placeholder="رابط صورة أيقونة الموقع" />
+                                </FormControl>
+                                <FormDescription>
+                                  أيقونة صغيرة تظهر في تبويب المتصفح
+                                </FormDescription>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
                           <FormField
                             control={form.control}
                             name="logo"
                             render={({ field }) => (
                               <FormItem>
-                                <FormLabel>شعار الموقع (لوجو)</FormLabel>
+                                <FormLabel>شعار الموقع</FormLabel>
                                 <FormControl>
-                                  <div className="flex gap-2">
-                                    <Input 
-                                      {...field} 
-                                      placeholder="https://example.com/logo.png"
-                                      dir="ltr"
-                                    />
-                                    {field.value && (
-                                      <div className="w-10 h-10 border flex items-center justify-center overflow-hidden">
-                                        <img 
-                                          src={field.value} 
-                                          alt="معاينة الشعار" 
-                                          className="max-w-full max-h-full"
-                                        />
-                                      </div>
-                                    )}
-                                  </div>
+                                  <Input {...field} placeholder="رابط صورة شعار الموقع" />
                                 </FormControl>
                                 <FormDescription>
-                                  رابط شعار الموقع للوضع الفاتح (PNG/SVG)
+                                  شعار الموقع في الوضع الفاتح
                                 </FormDescription>
                                 <FormMessage />
                               </FormItem>
@@ -556,62 +509,16 @@ export default function SiteSettingsPage() {
                               <FormItem>
                                 <FormLabel>شعار الوضع الداكن</FormLabel>
                                 <FormControl>
-                                  <div className="flex gap-2">
-                                    <Input 
-                                      {...field} 
-                                      placeholder="https://example.com/logo-dark.png"
-                                      dir="ltr"
-                                    />
-                                    {field.value && (
-                                      <div className="w-10 h-10 border bg-slate-800 flex items-center justify-center overflow-hidden">
-                                        <img 
-                                          src={field.value} 
-                                          alt="معاينة الشعار" 
-                                          className="max-w-full max-h-full"
-                                        />
-                                      </div>
-                                    )}
-                                  </div>
+                                  <Input {...field} placeholder="رابط صورة الشعار للوضع الداكن" />
                                 </FormControl>
                                 <FormDescription>
-                                  رابط شعار الموقع للوضع الداكن (PNG/SVG)
+                                  شعار الموقع في الوضع الداكن
                                 </FormDescription>
                                 <FormMessage />
                               </FormItem>
                             )}
                           />
                         </div>
-                        <FormField
-                          control={form.control}
-                          name="favicon"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>أيقونة الموقع (Favicon)</FormLabel>
-                              <FormControl>
-                                <div className="flex gap-2">
-                                  <Input 
-                                    {...field} 
-                                    placeholder="https://example.com/favicon.ico"
-                                    dir="ltr"
-                                  />
-                                  {field.value && (
-                                    <div className="w-10 h-10 border flex items-center justify-center overflow-hidden">
-                                      <img 
-                                        src={field.value} 
-                                        alt="معاينة الأيقونة" 
-                                        className="max-w-full max-h-full"
-                                      />
-                                    </div>
-                                  )}
-                                </div>
-                              </FormControl>
-                              <FormDescription>
-                                رابط أيقونة الموقع التي تظهر في المتصفح (ICO/PNG)
-                              </FormDescription>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
                         <div className="grid md:grid-cols-3 gap-4">
                           <FormField
                             control={form.control}
@@ -619,21 +526,19 @@ export default function SiteSettingsPage() {
                             render={({ field }) => (
                               <FormItem>
                                 <FormLabel>اللون الرئيسي</FormLabel>
-                                <FormControl>
-                                  <div className="flex gap-2">
-                                    <Input 
-                                      {...field} 
-                                      placeholder="#3b82f6"
-                                      dir="ltr"
-                                    />
-                                    <div 
-                                      className="w-10 h-10 border"
-                                      style={{ backgroundColor: field.value || '#ffffff' }}
-                                    />
-                                  </div>
-                                </FormControl>
+                                <div className="flex gap-2">
+                                  <FormControl>
+                                    <Input {...field} placeholder="#3B82F6" />
+                                  </FormControl>
+                                  <input
+                                    type="color"
+                                    value={field.value || '#3B82F6'}
+                                    onChange={(e) => field.onChange(e.target.value)}
+                                    className="w-10 h-10 rounded-md p-1"
+                                  />
+                                </div>
                                 <FormDescription>
-                                  اللون الرئيسي للموقع (بتنسيق Hex)
+                                  اللون الرئيسي للموقع (رمز هيكس)
                                 </FormDescription>
                                 <FormMessage />
                               </FormItem>
@@ -645,21 +550,19 @@ export default function SiteSettingsPage() {
                             render={({ field }) => (
                               <FormItem>
                                 <FormLabel>اللون الثانوي</FormLabel>
-                                <FormControl>
-                                  <div className="flex gap-2">
-                                    <Input 
-                                      {...field} 
-                                      placeholder="#10b981"
-                                      dir="ltr"
-                                    />
-                                    <div 
-                                      className="w-10 h-10 border"
-                                      style={{ backgroundColor: field.value || '#ffffff' }}
-                                    />
-                                  </div>
-                                </FormControl>
+                                <div className="flex gap-2">
+                                  <FormControl>
+                                    <Input {...field} placeholder="#10B981" />
+                                  </FormControl>
+                                  <input
+                                    type="color"
+                                    value={field.value || '#10B981'}
+                                    onChange={(e) => field.onChange(e.target.value)}
+                                    className="w-10 h-10 rounded-md p-1"
+                                  />
+                                </div>
                                 <FormDescription>
-                                  اللون الثانوي للموقع (بتنسيق Hex)
+                                  اللون الثانوي للموقع (رمز هيكس)
                                 </FormDescription>
                                 <FormMessage />
                               </FormItem>
@@ -671,23 +574,63 @@ export default function SiteSettingsPage() {
                             render={({ field }) => (
                               <FormItem>
                                 <FormLabel>لون التمييز</FormLabel>
-                                <FormControl>
-                                  <div className="flex gap-2">
-                                    <Input 
-                                      {...field} 
-                                      placeholder="#8b5cf6"
-                                      dir="ltr"
-                                    />
-                                    <div 
-                                      className="w-10 h-10 border"
-                                      style={{ backgroundColor: field.value || '#ffffff' }}
-                                    />
-                                  </div>
-                                </FormControl>
+                                <div className="flex gap-2">
+                                  <FormControl>
+                                    <Input {...field} placeholder="#8B5CF6" />
+                                  </FormControl>
+                                  <input
+                                    type="color"
+                                    value={field.value || '#8B5CF6'}
+                                    onChange={(e) => field.onChange(e.target.value)}
+                                    className="w-10 h-10 rounded-md p-1"
+                                  />
+                                </div>
                                 <FormDescription>
-                                  لون التمييز للموقع (بتنسيق Hex)
+                                  لون التمييز للعناصر البارزة (رمز هيكس)
                                 </FormDescription>
                                 <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                        </div>
+                        <div className="grid md:grid-cols-2 gap-4">
+                          <FormField
+                            control={form.control}
+                            name="enableNewsletter"
+                            render={({ field }) => (
+                              <FormItem className="flex flex-row items-center justify-between p-3 border rounded-md">
+                                <div>
+                                  <FormLabel className="mb-0">النشرة البريدية</FormLabel>
+                                  <FormDescription>
+                                    عرض نموذج الاشتراك بالنشرة البريدية
+                                  </FormDescription>
+                                </div>
+                                <FormControl>
+                                  <Switch
+                                    checked={field.value}
+                                    onCheckedChange={field.onChange}
+                                  />
+                                </FormControl>
+                              </FormItem>
+                            )}
+                          />
+                          <FormField
+                            control={form.control}
+                            name="enableScholarshipSearch"
+                            render={({ field }) => (
+                              <FormItem className="flex flex-row items-center justify-between p-3 border rounded-md">
+                                <div>
+                                  <FormLabel className="mb-0">بحث المنح</FormLabel>
+                                  <FormDescription>
+                                    عرض محرك بحث المنح في الصفحة الرئيسية
+                                  </FormDescription>
+                                </div>
+                                <FormControl>
+                                  <Switch
+                                    checked={field.value}
+                                    onCheckedChange={field.onChange}
+                                  />
+                                </FormControl>
                               </FormItem>
                             )}
                           />
@@ -702,117 +645,74 @@ export default function SiteSettingsPage() {
                       <CardHeader>
                         <CardTitle>معلومات التواصل</CardTitle>
                         <CardDescription>
-                          معلومات التواصل الأساسية للموقع
+                          معلومات التواصل الرئيسية للموقع
                         </CardDescription>
                       </CardHeader>
                       <CardContent className="space-y-4">
-                        <div className="grid md:grid-cols-2 gap-4">
-                          <FormField
-                            control={form.control}
-                            name="email"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>البريد الإلكتروني</FormLabel>
-                                <FormControl>
-                                  <div className="flex">
-                                    <span className="inline-flex items-center px-3 rounded-r-none border border-l-0 border-input bg-muted">
-                                      <Mail className="h-4 w-4 text-muted-foreground" />
-                                    </span>
-                                    <Input 
-                                      {...field} 
-                                      className="rounded-r-none"
-                                      placeholder="info@example.com"
-                                      dir="ltr"
-                                    />
-                                  </div>
-                                </FormControl>
-                                <FormDescription>
-                                  البريد الإلكتروني الرئيسي للاتصال
-                                </FormDescription>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          <FormField
-                            control={form.control}
-                            name="phone"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>رقم الهاتف</FormLabel>
-                                <FormControl>
-                                  <div className="flex">
-                                    <span className="inline-flex items-center px-3 rounded-r-none border border-l-0 border-input bg-muted">
-                                      <Phone className="h-4 w-4 text-muted-foreground" />
-                                    </span>
-                                    <Input 
-                                      {...field} 
-                                      className="rounded-r-none"
-                                      placeholder="+1234567890"
-                                      dir="ltr"
-                                    />
-                                  </div>
-                                </FormControl>
-                                <FormDescription>
-                                  رقم الهاتف للاتصال
-                                </FormDescription>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                        </div>
-                        <div className="grid md:grid-cols-2 gap-4">
-                          <FormField
-                            control={form.control}
-                            name="whatsapp"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>رقم واتساب</FormLabel>
-                                <FormControl>
-                                  <div className="flex">
-                                    <span className="inline-flex items-center px-3 rounded-r-none border border-l-0 border-input bg-muted">
-                                      <Phone className="h-4 w-4 text-muted-foreground" />
-                                    </span>
-                                    <Input 
-                                      {...field} 
-                                      className="rounded-r-none"
-                                      placeholder="+1234567890"
-                                      dir="ltr"
-                                    />
-                                  </div>
-                                </FormControl>
-                                <FormDescription>
-                                  رقم واتساب للاتصال (اختياري)
-                                </FormDescription>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          <FormField
-                            control={form.control}
-                            name="address"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>العنوان</FormLabel>
-                                <FormControl>
-                                  <div className="flex">
-                                    <span className="inline-flex items-center px-3 rounded-r-none border border-l-0 border-input bg-muted">
-                                      <MapPin className="h-4 w-4 text-muted-foreground" />
-                                    </span>
-                                    <Input 
-                                      {...field} 
-                                      className="rounded-r-none"
-                                      placeholder="العنوان البريدي"
-                                    />
-                                  </div>
-                                </FormControl>
-                                <FormDescription>
-                                  العنوان البريدي (اختياري)
-                                </FormDescription>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                        </div>
+                        <FormField
+                          control={form.control}
+                          name="email"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>البريد الإلكتروني</FormLabel>
+                              <FormControl>
+                                <Input {...field} placeholder="info@example.com" />
+                              </FormControl>
+                              <FormDescription>
+                                البريد الإلكتروني العام للتواصل
+                              </FormDescription>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={form.control}
+                          name="phone"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>رقم الهاتف</FormLabel>
+                              <FormControl>
+                                <Input {...field} placeholder="+966 5xxxxxxxx" />
+                              </FormControl>
+                              <FormDescription>
+                                رقم الهاتف للتواصل
+                              </FormDescription>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={form.control}
+                          name="whatsapp"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>رقم واتساب</FormLabel>
+                              <FormControl>
+                                <Input {...field} placeholder="+966 5xxxxxxxx" />
+                              </FormControl>
+                              <FormDescription>
+                                رقم واتساب للتواصل
+                              </FormDescription>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={form.control}
+                          name="address"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>العنوان</FormLabel>
+                              <FormControl>
+                                <Textarea {...field} placeholder="عنوان المكتب أو المقر" rows={3} />
+                              </FormControl>
+                              <FormDescription>
+                                عنوان المقر أو المكتب
+                              </FormDescription>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
                       </CardContent>
                     </Card>
                   </TabsContent>
@@ -821,9 +721,9 @@ export default function SiteSettingsPage() {
                   <TabsContent value="social">
                     <Card>
                       <CardHeader>
-                        <CardTitle>روابط التواصل الاجتماعي</CardTitle>
+                        <CardTitle>وسائل التواصل الاجتماعي</CardTitle>
                         <CardDescription>
-                          روابط حسابات الموقع على منصات التواصل الاجتماعي
+                          روابط الحسابات على مواقع التواصل الاجتماعي
                         </CardDescription>
                       </CardHeader>
                       <CardContent className="space-y-4">
@@ -835,15 +735,8 @@ export default function SiteSettingsPage() {
                               <FormItem>
                                 <FormLabel>فيسبوك</FormLabel>
                                 <FormControl>
-                                  <Input 
-                                    {...field} 
-                                    placeholder="https://facebook.com/username"
-                                    dir="ltr"
-                                  />
+                                  <Input {...field} placeholder="https://facebook.com/yourpage" />
                                 </FormControl>
-                                <FormDescription>
-                                  رابط صفحة فيسبوك
-                                </FormDescription>
                                 <FormMessage />
                               </FormItem>
                             )}
@@ -855,21 +748,12 @@ export default function SiteSettingsPage() {
                               <FormItem>
                                 <FormLabel>تويتر</FormLabel>
                                 <FormControl>
-                                  <Input 
-                                    {...field} 
-                                    placeholder="https://twitter.com/username"
-                                    dir="ltr"
-                                  />
+                                  <Input {...field} placeholder="https://twitter.com/yourhandle" />
                                 </FormControl>
-                                <FormDescription>
-                                  رابط حساب تويتر
-                                </FormDescription>
                                 <FormMessage />
                               </FormItem>
                             )}
                           />
-                        </div>
-                        <div className="grid md:grid-cols-2 gap-4">
                           <FormField
                             control={form.control}
                             name="instagram"
@@ -877,15 +761,8 @@ export default function SiteSettingsPage() {
                               <FormItem>
                                 <FormLabel>انستقرام</FormLabel>
                                 <FormControl>
-                                  <Input 
-                                    {...field} 
-                                    placeholder="https://instagram.com/username"
-                                    dir="ltr"
-                                  />
+                                  <Input {...field} placeholder="https://instagram.com/yourprofile" />
                                 </FormControl>
-                                <FormDescription>
-                                  رابط حساب انستقرام
-                                </FormDescription>
                                 <FormMessage />
                               </FormItem>
                             )}
@@ -897,69 +774,51 @@ export default function SiteSettingsPage() {
                               <FormItem>
                                 <FormLabel>يوتيوب</FormLabel>
                                 <FormControl>
-                                  <Input 
-                                    {...field} 
-                                    placeholder="https://youtube.com/channel/..."
-                                    dir="ltr"
-                                  />
+                                  <Input {...field} placeholder="https://youtube.com/c/yourchannel" />
                                 </FormControl>
-                                <FormDescription>
-                                  رابط قناة يوتيوب
-                                </FormDescription>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <FormField
+                            control={form.control}
+                            name="linkedin"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>لينكد إن</FormLabel>
+                                <FormControl>
+                                  <Input {...field} placeholder="https://linkedin.com/company/yourcompany" />
+                                </FormControl>
                                 <FormMessage />
                               </FormItem>
                             )}
                           />
                         </div>
-                        <FormField
-                          control={form.control}
-                          name="linkedin"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>لينكد إن</FormLabel>
-                              <FormControl>
-                                <Input 
-                                  {...field} 
-                                  placeholder="https://linkedin.com/company/..."
-                                  dir="ltr"
-                                />
-                              </FormControl>
-                              <FormDescription>
-                                رابط صفحة لينكد إن
-                              </FormDescription>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
                       </CardContent>
-                      <CardFooter className="flex justify-between">
-                        <Button 
-                          type="button"
-                          variant="outline"
-                          onClick={() => setActiveTab('contact')}
-                        >
-                          السابق
-                        </Button>
-                        <Button 
-                          type="submit" 
-                          disabled={updateMutation.isPending}
-                        >
-                          {updateMutation.isPending ? (
-                            <>
-                              <RefreshCw className="ml-2 h-4 w-4 animate-spin" />
-                              جاري الحفظ...
-                            </>
-                          ) : (
-                            <>
-                              <Check className="ml-2 h-4 w-4" />
-                              حفظ الإعدادات
-                            </>
-                          )}
-                        </Button>
+                      <CardFooter>
+                        <p className="text-muted-foreground text-sm">
+                          ملاحظة: اترك الحقل فارغًا للحسابات غير المتوفرة
+                        </p>
                       </CardFooter>
                     </Card>
                   </TabsContent>
                 </Tabs>
+                
+                <div className="flex justify-end">
+                  <Button type="submit" disabled={updateMutation.isPending || isLoading}>
+                    {updateMutation.isPending ? (
+                      <>
+                        <RefreshCw className="ml-2 h-4 w-4 animate-spin" />
+                        جاري الحفظ...
+                      </>
+                    ) : (
+                      <>
+                        <Save className="ml-2 h-4 w-4" />
+                        حفظ الإعدادات
+                      </>
+                    )}
+                  </Button>
+                </div>
               </form>
             </Form>
           )}
