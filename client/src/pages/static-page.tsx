@@ -10,7 +10,7 @@ const StaticPage = () => {
   const [_, setLocation] = useLocation();
 
   useEffect(() => {
-    // إذا كان هناك خطأ (مثل الصفحة غير موجودة)، قم بالتوجيه إلى الصفحة الرئيسية
+    // إذا كان هناك خطأ (مثل الصفحة غير موجودة)، قم بالتوجيه إلى صفحة الخطأ
     if (error && !isLoading) {
       setLocation("/404");
     }
@@ -29,20 +29,35 @@ const StaticPage = () => {
   }
 
   return (
-    <div className="bg-background">
+    <div className="bg-background pb-16">
       <Helmet>
         <title>{page.metaTitle || `${page.title} | FULLSCO`}</title>
         {page.metaDescription && <meta name="description" content={page.metaDescription} />}
       </Helmet>
 
+      {/* قسم الهيدر */}
+      <div className="bg-primary/5 border-b">
+        <div className="container mx-auto px-4 py-12 sm:px-6 lg:px-8">
+          <div className="max-w-4xl mx-auto">
+            <h1 className="text-3xl md:text-4xl font-bold text-foreground">{page.title}</h1>
+          </div>
+        </div>
+      </div>
+
+      {/* محتوى الصفحة */}
       <div className="container mx-auto px-4 py-12 sm:px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto">
-          {/* عنوان الصفحة */}
-          <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-8">{page.title}</h1>
-          
-          {/* محتوى الصفحة */}
+        <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-sm p-8 rtl">
           <div 
-            className="prose prose-lg dark:prose-invert prose-headings:text-foreground prose-p:text-muted-foreground prose-a:text-primary hover:prose-a:text-primary/80 prose-strong:text-foreground/90 max-w-none"
+            className="prose prose-lg dark:prose-invert rtl
+              prose-headings:text-foreground prose-headings:font-bold prose-headings:mb-4
+              prose-h1:text-2xl prose-h2:text-xl prose-h3:text-lg
+              prose-p:text-muted-foreground prose-p:mb-4 prose-p:leading-relaxed
+              prose-a:text-primary prose-a:no-underline hover:prose-a:text-primary/80 hover:prose-a:underline
+              prose-strong:text-foreground/90 prose-strong:font-bold
+              prose-ul:mr-6 prose-ul:list-disc prose-ul:mb-4
+              prose-ol:mr-6 prose-ol:list-decimal prose-ol:mb-4
+              prose-li:mb-1
+              max-w-none"
             dangerouslySetInnerHTML={{ __html: page.content }}
           />
         </div>
