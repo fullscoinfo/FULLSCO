@@ -21,6 +21,14 @@ export interface IStorage {
   getUserByEmail(email: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
   listUsers(): Promise<User[]>;
+  
+  // Static Page operations
+  getPage(id: number): Promise<Page | undefined>;
+  getPageBySlug(slug: string): Promise<Page | undefined>;
+  createPage(page: InsertPage): Promise<Page>;
+  updatePage(id: number, page: Partial<InsertPage>): Promise<Page | undefined>;
+  deletePage(id: number): Promise<boolean>;
+  listPages(filters?: { isPublished?: boolean, showInHeader?: boolean, showInFooter?: boolean }): Promise<Page[]>;
 
   // Category operations
   getCategory(id: number): Promise<Category | undefined>;

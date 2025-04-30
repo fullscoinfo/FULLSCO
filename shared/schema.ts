@@ -200,6 +200,27 @@ export const insertSiteSettingsSchema = createInsertSchema(siteSettings).omit({
   id: true
 });
 
+// Static Pages Table
+export const pages = pgTable("pages", {
+  id: serial("id").primaryKey(),
+  title: text("title").notNull(),
+  slug: text("slug").notNull().unique(),
+  content: text("content").notNull(),
+  metaTitle: text("meta_title"),
+  metaDescription: text("meta_description"),
+  isPublished: boolean("is_published").default(true),
+  showInFooter: boolean("show_in_footer").default(false),
+  showInHeader: boolean("show_in_header").default(false),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull()
+});
+
+export const insertPageSchema = createInsertSchema(pages).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true
+});
+
 // Export Types
 export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
@@ -236,3 +257,6 @@ export type InsertSeoSetting = z.infer<typeof insertSeoSettingsSchema>;
 
 export type SiteSetting = typeof siteSettings.$inferSelect;
 export type InsertSiteSetting = z.infer<typeof insertSiteSettingsSchema>;
+
+export type Page = typeof pages.$inferSelect;
+export type InsertPage = z.infer<typeof insertPageSchema>;
