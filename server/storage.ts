@@ -9,7 +9,8 @@ import {
   postTags, PostTag, InsertPostTag,
   successStories, SuccessStory, InsertSuccessStory,
   subscribers, Subscriber, InsertSubscriber,
-  seoSettings, SeoSetting, InsertSeoSetting
+  seoSettings, SeoSetting, InsertSeoSetting,
+  siteSettings, SiteSetting, InsertSiteSetting
 } from "@shared/schema";
 
 // Storage interface
@@ -90,6 +91,10 @@ export interface IStorage {
   createSeoSetting(seoSetting: InsertSeoSetting): Promise<SeoSetting>;
   updateSeoSetting(id: number, seoSetting: Partial<InsertSeoSetting>): Promise<SeoSetting | undefined>;
   listSeoSettings(): Promise<SeoSetting[]>;
+  
+  // Site settings operations
+  getSiteSettings(): Promise<SiteSetting | undefined>;
+  updateSiteSettings(settings: Partial<InsertSiteSetting>): Promise<SiteSetting>;
 }
 
 export class MemStorage implements IStorage {
@@ -104,6 +109,7 @@ export class MemStorage implements IStorage {
   private successStories: Map<number, SuccessStory>;
   private subscribers: Map<number, Subscriber>;
   private seoSettings: Map<number, SeoSetting>;
+  private siteSettings: SiteSetting | undefined;
   private currentIds: {
     users: number;
     categories: number;
@@ -116,6 +122,7 @@ export class MemStorage implements IStorage {
     successStories: number;
     subscribers: number;
     seoSettings: number;
+    siteSettings: number;
   };
 
   constructor() {
@@ -144,7 +151,8 @@ export class MemStorage implements IStorage {
       postTags: 1,
       successStories: 1,
       subscribers: 1,
-      seoSettings: 1
+      seoSettings: 1,
+      siteSettings: 1
     };
 
     // Seed initial data
@@ -327,6 +335,30 @@ export class MemStorage implements IStorage {
     for (const setting of seoSettings) {
       this.createSeoSetting(setting);
     }
+    
+    // Seed site settings
+    this.updateSiteSettings({
+      siteName: "FULLSCO",
+      siteTagline: "Find Your Perfect Scholarship",
+      siteDescription: "FULLSCO helps students find and apply for scholarships worldwide with expert guidance and resources.",
+      email: "contact@fullsco.com",
+      phone: "+1 (555) 123-4567",
+      whatsapp: "+1 (555) 123-4567",
+      address: "123 Education St, Knowledge City",
+      facebook: "https://facebook.com/fullsco",
+      twitter: "https://twitter.com/fullsco",
+      instagram: "https://instagram.com/fullsco",
+      linkedin: "https://linkedin.com/company/fullsco",
+      primaryColor: "#3B82F6",
+      secondaryColor: "#10B981",
+      accentColor: "#F59E0B",
+      enableDarkMode: true,
+      rtlDirection: true,
+      defaultLanguage: "ar",
+      enableNewsletter: true,
+      enableScholarshipSearch: true,
+      footerText: "© 2023 FULLSCO. All rights reserved."
+    });
   }
 
   // User methods
@@ -733,6 +765,54 @@ export class MemStorage implements IStorage {
 
   async listSeoSettings(): Promise<SeoSetting[]> {
     return Array.from(this.seoSettings.values());
+  }
+  
+  // Site Settings methods
+  async getSiteSettings(): Promise<SiteSetting | undefined> {
+    return this.siteSettings;
+  }
+  
+  async updateSiteSettings(settings: Partial<InsertSiteSetting>): Promise<SiteSetting> {
+    if (!this.siteSettings) {
+      // Create new settings if none exist
+      const id = this.currentIds.siteSettings++;
+      this.siteSettings = {
+        id,
+        ...settings,
+        siteName: settings.siteName || "FULLSCO",
+        siteTagline: settings.siteTagline || "",
+        siteDescription: settings.siteDescription || "",
+        favicon: settings.favicon || null,
+        logo: settings.logo || null,
+        logoDark: settings.logoDark || null,
+        email: settings.email || null,
+        phone: settings.phone || null,
+        whatsapp: settings.whatsapp || null,
+        address: settings.address || null,
+        facebook: settings.facebook || null,
+        twitter: settings.twitter || null,
+        instagram: settings.instagram || null,
+        youtube: settings.youtube || null,
+        linkedin: settings.linkedin || null,
+        primaryColor: settings.primaryColor || "#3B82F6",
+        secondaryColor: settings.secondaryColor || "#10B981",
+        accentColor: settings.accentColor || "#F59E0B",
+        enableDarkMode: settings.enableDarkMode !== undefined ? settings.enableDarkMode : true,
+        rtlDirection: settings.rtlDirection !== undefined ? settings.rtlDirection : true,
+        defaultLanguage: settings.defaultLanguage || "ar",
+        enableNewsletter: settings.enableNewsletter !== undefined ? settings.enableNewsletter : true,
+        enableScholarshipSearch: settings.enableScholarshipSearch !== undefined ? settings.enableScholarshipSearch : true,
+        footerText: settings.footerText || null
+      };
+    } else {
+      // Update existing settings
+      this.siteSettings = {
+        ...this.siteSettings,
+        ...settings
+      };
+    }
+    
+    return this.siteSettings;
   }
 }
 
