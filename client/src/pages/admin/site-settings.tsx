@@ -16,7 +16,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
-import Sidebar from '@/components/admin/sidebar';
+import Sidebar from '@/components/admin/new-sidebar';
 import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
@@ -236,7 +236,7 @@ export default function SiteSettingsPage() {
       {/* المحتوى الرئيسي */}
       <div className={cn(
         "transition-all duration-300",
-        isMobile ? "w-full" : "mr-64"
+        isMobile ? "w-full" : "md:mr-64"
       )}>
         <main className="p-4 md:p-6">
           {/* زر فتح السايدبار في الجوال والهيدر */}

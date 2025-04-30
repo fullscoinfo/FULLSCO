@@ -30,11 +30,12 @@ export default function Login() {
   const { toast } = useToast();
   const [, navigate] = useLocation();
   
-  // Redirect if already logged in
-  if (isAuthenticated) {
-    navigate('/admin');
-    return null;
-  }
+  // سنستخدم useEffect بدلاً من القيام بعملية التوجيه المباشر
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/admin');
+    }
+  }, [isAuthenticated, navigate]);
   
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -48,14 +49,16 @@ export default function Login() {
     login(data);
   };
 
-  // Show error toast if login fails
-  if (loginStatus.isError) {
-    toast({
-      title: "فشل تسجيل الدخول",
-      description: "اسم المستخدم أو كلمة المرور غير صحيحة. حاول مرة أخرى.",
-      variant: "destructive",
-    });
-  }
+  // استخدام useEffect لعرض رسالة الخطأ
+  useEffect(() => {
+    if (loginStatus.isError) {
+      toast({
+        title: "فشل تسجيل الدخول",
+        description: "اسم المستخدم أو كلمة المرور غير صحيحة. حاول مرة أخرى.",
+        variant: "destructive",
+      });
+    }
+  }, [loginStatus.isError, toast]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
