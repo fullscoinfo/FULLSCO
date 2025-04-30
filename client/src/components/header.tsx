@@ -12,6 +12,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/hooks/use-auth";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useSiteSettings } from "@/hooks/use-site-settings";
 
 const Header = () => {
   const [location] = useLocation();
@@ -19,6 +20,7 @@ const Header = () => {
   const [scrolled, setScrolled] = useState(false);
   const { user } = useAuth();
   const isMobile = useIsMobile();
+  const { settings, isLoading: settingsLoading } = useSiteSettings();
 
   useEffect(() => {
     const handleScroll = () => {

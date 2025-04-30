@@ -36,6 +36,7 @@ import Header from "@/components/header";
 import Footer from "@/components/footer";
 import { useEffect } from "react";
 import { NotificationProvider } from "@/components/notifications/notification-provider";
+import { SiteSettingsProvider } from "@/hooks/use-site-settings";
 
 function App() {
   // Get current location to determine if we're on an admin page
@@ -75,50 +76,52 @@ function App() {
   };
 
   return (
-    <TooltipProvider>
-      {!isAdminPage && <Header />}
-      {wrapInNotificationProvider(
-        <Switch>
-          {/* Public routes */}
-          <Route path="/" component={Home} />
-          <Route path="/scholarships" component={Scholarships} />
-          <Route path="/scholarships/:slug" component={ScholarshipDetail} />
-          <Route path="/articles" component={Articles} />
-          <Route path="/articles/:slug" component={ArticleDetail} />
-          
-          {/* Admin Login */}
-          <Route path="/admin/login" component={AdminLogin} />
-          
-          {/* New Admin Dashboard */}
-          <Route path="/admin/new" component={NewDashboard} />
-          <Route path="/admin/new/site-settings" component={NewSiteSettings} />
-          
-          {/* Original Admin Routes */}
-          <Route path="/admin" component={AdminDashboard} />
-          <Route path="/admin/scholarships" component={AdminScholarships} />
-          <Route path="/admin/categories" component={AdminCategories} />
-          <Route path="/admin/levels" component={AdminLevels} />
-          <Route path="/admin/countries" component={AdminCountries} />
-          <Route path="/admin/posts" component={AdminPosts} />
-          <Route path="/admin/users" component={AdminUsers} />
-          <Route path="/admin/settings" component={AdminSettings} />
-          <Route path="/admin/site-settings" component={AdminSiteSettings} />
-          <Route path="/admin/pages" component={AdminPages} />
-          <Route path="/admin/menus" component={AdminMenus} />
-          <Route path="/admin/media" component={AdminMedia} />
-          <Route path="/admin/roles" component={AdminRoles} />
-          <Route path="/admin/backups" component={AdminBackups} />
-          <Route path="/admin/seo" component={AdminSEO} />
-          <Route path="/admin/analytics" component={AdminAnalytics} />
-          <Route path="/admin/scholarships/create" component={CreateScholarship} />
-          <Route path="/admin/posts/create" component={CreatePost} />
-          
-          {/* Fallback to 404 */}
-          <Route component={NotFound} />
-        </Switch>
-      )}
-      {!isAdminPage && <Footer />}
-    </TooltipProvider>
+    <SiteSettingsProvider>
+      <TooltipProvider>
+        {!isAdminPage && <Header />}
+        {wrapInNotificationProvider(
+          <Switch>
+            {/* Public routes */}
+            <Route path="/" component={Home} />
+            <Route path="/scholarships" component={Scholarships} />
+            <Route path="/scholarships/:slug" component={ScholarshipDetail} />
+            <Route path="/articles" component={Articles} />
+            <Route path="/articles/:slug" component={ArticleDetail} />
+            
+            {/* Admin Login */}
+            <Route path="/admin/login" component={AdminLogin} />
+            
+            {/* New Admin Dashboard */}
+            <Route path="/admin/new" component={NewDashboard} />
+            <Route path="/admin/new/site-settings" component={NewSiteSettings} />
+            
+            {/* Original Admin Routes */}
+            <Route path="/admin" component={AdminDashboard} />
+            <Route path="/admin/scholarships" component={AdminScholarships} />
+            <Route path="/admin/categories" component={AdminCategories} />
+            <Route path="/admin/levels" component={AdminLevels} />
+            <Route path="/admin/countries" component={AdminCountries} />
+            <Route path="/admin/posts" component={AdminPosts} />
+            <Route path="/admin/users" component={AdminUsers} />
+            <Route path="/admin/settings" component={AdminSettings} />
+            <Route path="/admin/site-settings" component={AdminSiteSettings} />
+            <Route path="/admin/pages" component={AdminPages} />
+            <Route path="/admin/menus" component={AdminMenus} />
+            <Route path="/admin/media" component={AdminMedia} />
+            <Route path="/admin/roles" component={AdminRoles} />
+            <Route path="/admin/backups" component={AdminBackups} />
+            <Route path="/admin/seo" component={AdminSEO} />
+            <Route path="/admin/analytics" component={AdminAnalytics} />
+            <Route path="/admin/scholarships/create" component={CreateScholarship} />
+            <Route path="/admin/posts/create" component={CreatePost} />
+            
+            {/* Fallback to 404 */}
+            <Route component={NotFound} />
+          </Switch>
+        )}
+        {!isAdminPage && <Footer />}
+      </TooltipProvider>
+    </SiteSettingsProvider>
   );
 }
 
