@@ -140,7 +140,7 @@ const Header = () => {
               </Link>
               
               {/* عرض الصفحات الثابتة في الرأس */}
-              {headerPages?.map(page => (
+              {headerPages?.filter(page => page.showInHeader && page.isPublished).map(page => (
                 <Link key={page.id} href={`/page/${page.slug}`}>
                   <span className={`link-hover flex items-center px-3 py-2 text-sm font-medium transition-colors ${isPageActive(page.slug) ? 'text-primary' : 'text-foreground/80 hover:text-primary'}`}>
                     {page.title}
@@ -265,7 +265,7 @@ const Header = () => {
               </Link>
               
               {/* عرض الصفحات الثابتة في القائمة المتنقلة */}
-              {headerPages?.map(page => (
+              {headerPages?.filter(page => page.showInHeader && page.isPublished).map(page => (
                 <Link key={page.id} href={`/page/${page.slug}`}>
                   <div className="flex items-center gap-2 rounded-md px-3 py-2.5 text-base font-medium text-foreground/80 hover:bg-muted hover:text-primary">
                     <span className={isPageActive(page.slug) ? 'text-primary font-semibold' : ''}>

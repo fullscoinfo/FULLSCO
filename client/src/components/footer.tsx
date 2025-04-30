@@ -159,36 +159,16 @@ const Footer = () => {
               {settings?.footerText || `&copy; ${new Date().getFullYear()} ${settings?.siteName || 'FULLSCO'}. جميع الحقوق محفوظة.`}
             </p>
             <div className="flex space-x-4 rtl:space-x-reverse mt-4 md:mt-0">
-              {/* عرض روابط الصفحات الشائعة كالخصوصية والشروط إن وجدت، أو استخدم روابط ثابتة إن لم تكن موجودة */}
-              {footerPages?.find(page => page.slug === 'privacy-policy') ? (
-                <Link href={`/page/privacy-policy`}>
-                  <span className="text-sm text-gray-400 hover:text-white">سياسة الخصوصية</span>
+              {/* عرض روابط الصفحات السفلية المخصصة - فقط الصفحات الموجودة بالفعل */}
+              {footerPages?.filter(page => 
+                ['privacy-policy', 'terms', 'cookie-policy'].includes(page.slug)
+              ).map(page => (
+                <Link key={page.id} href={`/page/${page.slug}`}>
+                  <span className="text-sm text-gray-400 hover:text-white mr-4">
+                    {page.title}
+                  </span>
                 </Link>
-              ) : (
-                <Link href="/privacy">
-                  <span className="text-sm text-gray-400 hover:text-white">سياسة الخصوصية</span>
-                </Link>
-              )}
-              
-              {footerPages?.find(page => page.slug === 'terms') ? (
-                <Link href={`/page/terms`}>
-                  <span className="text-sm text-gray-400 hover:text-white">شروط الخدمة</span>
-                </Link>
-              ) : (
-                <Link href="/terms">
-                  <span className="text-sm text-gray-400 hover:text-white">شروط الخدمة</span>
-                </Link>
-              )}
-              
-              {footerPages?.find(page => page.slug === 'cookie-policy') ? (
-                <Link href={`/page/cookie-policy`}>
-                  <span className="text-sm text-gray-400 hover:text-white">سياسة ملفات تعريف الارتباط</span>
-                </Link>
-              ) : (
-                <Link href="/cookies">
-                  <span className="text-sm text-gray-400 hover:text-white">سياسة ملفات تعريف الارتباط</span>
-                </Link>
-              )}
+              ))}
             </div>
           </div>
         </div>
