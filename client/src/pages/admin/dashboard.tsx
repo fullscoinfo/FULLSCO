@@ -3,7 +3,7 @@ import { useLocation } from 'wouter';
 import { useQuery } from '@tanstack/react-query';
 import { useAuth } from '@/hooks/use-auth';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import Sidebar from '@/components/admin/sidebar';
+import Sidebar from '@/components/admin/new-sidebar';
 import { 
   BarChart2, 
   Users, 

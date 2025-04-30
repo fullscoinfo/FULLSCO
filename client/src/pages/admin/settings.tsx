@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useIsMobile } from '@/hooks/use-mobile';
-import Sidebar from '@/components/admin/sidebar';
+import Sidebar from '@/components/admin/new-sidebar';
 import { Button } from '@/components/ui/button';
 import { Menu, Save } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
