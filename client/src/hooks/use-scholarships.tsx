@@ -19,7 +19,7 @@ export function ScholarshipsProvider({ children }: { children: ReactNode }) {
     isLoading: scholarshipsLoading,
   } = useQuery<Scholarship[], Error>({
     queryKey: ["/api/scholarships"],
-    queryFn: getQueryFn({}),
+    queryFn: getQueryFn({ on401: "returnNull" }),
   });
 
   const {
@@ -28,7 +28,7 @@ export function ScholarshipsProvider({ children }: { children: ReactNode }) {
     isLoading: featuredLoading,
   } = useQuery<Scholarship[], Error>({
     queryKey: ["/api/scholarships/featured"],
-    queryFn: getQueryFn({}),
+    queryFn: getQueryFn({ on401: "returnNull" }),
   });
 
   // Combine errors

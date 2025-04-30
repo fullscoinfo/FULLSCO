@@ -21,7 +21,7 @@ export function PostsProvider({ children }: { children: ReactNode }) {
     isLoading: postsLoading,
   } = useQuery<Post[], Error>({
     queryKey: ["/api/posts"],
-    queryFn: getQueryFn({}),
+    queryFn: getQueryFn({ on401: "returnNull" }),
   });
 
   // فلترة المقالات المميزة

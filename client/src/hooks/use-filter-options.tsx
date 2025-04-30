@@ -22,7 +22,7 @@ export function FilterOptionsProvider({ children }: { children: ReactNode }) {
     isLoading: categoriesLoading,
   } = useQuery<Category[], Error>({
     queryKey: ["/api/categories"],
-    queryFn: getQueryFn({}),
+    queryFn: getQueryFn({ on401: "returnNull" }),
   });
 
   // جلب الدول
@@ -32,7 +32,7 @@ export function FilterOptionsProvider({ children }: { children: ReactNode }) {
     isLoading: countriesLoading,
   } = useQuery<Country[], Error>({
     queryKey: ["/api/countries"],
-    queryFn: getQueryFn({}),
+    queryFn: getQueryFn({ on401: "returnNull" }),
   });
 
   // جلب المستويات التعليمية
@@ -42,7 +42,7 @@ export function FilterOptionsProvider({ children }: { children: ReactNode }) {
     isLoading: levelsLoading,
   } = useQuery<Level[], Error>({
     queryKey: ["/api/levels"],
-    queryFn: getQueryFn({}),
+    queryFn: getQueryFn({ on401: "returnNull" }),
   });
 
   // تجميع حالات التحميل والأخطاء

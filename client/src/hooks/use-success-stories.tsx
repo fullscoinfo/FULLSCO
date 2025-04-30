@@ -20,7 +20,7 @@ export function SuccessStoriesProvider({ children }: { children: ReactNode }) {
     isLoading,
   } = useQuery<SuccessStory[], Error>({
     queryKey: ["/api/success-stories"],
-    queryFn: getQueryFn({}),
+    queryFn: getQueryFn({ on401: "returnNull" }),
   });
 
   return (
