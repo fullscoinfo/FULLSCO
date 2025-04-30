@@ -11,7 +11,8 @@ import {
   insertTagSchema,
   insertSuccessStorySchema,
   insertSubscriberSchema,
-  insertSeoSettingsSchema
+  insertSeoSettingsSchema,
+  insertSiteSettingsSchema
 } from "@shared/schema";
 import session from "express-session";
 import passport from "passport";
@@ -650,6 +651,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ message: "SEO setting not found" });
       }
       res.json(setting);
+    } catch (error) {
+      res.status(400).json({ message: (error as Error).message });
+    }
+  });
+
+  // Site Settings routes
+  app.get("/api/site-settings", async (req, res) => {
+    const settings = await storage.getSiteSettings();
+    if (!settings) {
+      return res.status(404).json({ message: "Site settings not found" });
+    }
+    res.json(settings);
+  });
+
+  app.put("/api/site-settings", isAdmin, async (req, res) => {
+    try {
+      const data = insertSiteSettingsSchema.partial().parse(req.body);
+      const settings = await storage.updateSiteSettings(data);
+      res.json(settings);
     } catch (error) {
       res.status(400).json({ message: (error as Error).message });
     }
