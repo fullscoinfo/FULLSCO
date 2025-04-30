@@ -70,14 +70,14 @@ const Scholarships = () => {
     queryKey: ['/api/categories']
   });
 
-  const getCountryName = (countryId?: number) => {
-    if (!countryId || !countries) return '';
+  const getCountryName = (countryId: number | null) => {
+    if (countryId === null || !countries) return '';
     const country = countries.find(c => c.id === countryId);
     return country?.name || '';
   };
 
-  const getLevelName = (levelId?: number) => {
-    if (!levelId || !levels) return '';
+  const getLevelName = (levelId: number | null) => {
+    if (levelId === null || !levels) return '';
     const level = levels.find(l => l.id === levelId);
     return level?.name || '';
   };
@@ -181,7 +181,7 @@ const Scholarships = () => {
                     <SelectValue placeholder="أي تمويل" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">أي تمويل</SelectItem>
+                    <SelectItem value="all">أي تمويل</SelectItem>
                     <SelectItem value="true">ممولة بالكامل فقط</SelectItem>
                   </SelectContent>
                 </Select>

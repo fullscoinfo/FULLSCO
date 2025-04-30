@@ -348,7 +348,7 @@ const CreateScholarship = () => {
                         <FormItem>
                           <FormLabel>الموعد النهائي للتقديم</FormLabel>
                           <FormControl>
-                            <Input placeholder="مثال: 30 يونيو، 2025" {...field} />
+                            <Input placeholder="مثال: 30 يونيو، 2025" {...field} value={field.value || ''} />
                           </FormControl>
                           <FormDescription>
                             أدخل الموعد النهائي لتقديم الطلبات.
@@ -365,7 +365,7 @@ const CreateScholarship = () => {
                         <FormItem>
                           <FormLabel>قيمة المنحة</FormLabel>
                           <FormControl>
-                            <Input placeholder="مثال: 10,000 دولار/سنة" {...field} />
+                            <Input placeholder="مثال: 10,000 دولار/سنة" {...field} value={field.value || ''} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
