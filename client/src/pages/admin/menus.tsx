@@ -550,7 +550,7 @@ export default function MenusPage() {
                                 </SelectTrigger>
                               </FormControl>
                               <SelectContent>
-                                <SelectItem value="">بدون أب (عنصر رئيسي)</SelectItem>
+                                <SelectItem value="null">بدون أب (عنصر رئيسي)</SelectItem>
                                 {parentItems.map(item => (
                                   <SelectItem key={item.id} value={item.id.toString()}>
                                     {item.title}
@@ -785,7 +785,7 @@ export default function MenusPage() {
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              <SelectItem value="">بدون أب (عنصر رئيسي)</SelectItem>
+                              <SelectItem value="null">بدون أب (عنصر رئيسي)</SelectItem>
                               {parentItems
                                 .filter(item => item.id !== selectedMenuItem.id) // منع اختيار نفس العنصر كأب
                                 .map(item => (

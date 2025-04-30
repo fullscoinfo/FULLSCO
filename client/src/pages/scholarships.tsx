@@ -121,7 +121,7 @@ const Scholarships = () => {
                     <SelectValue placeholder="جميع الدول" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">جميع الدول</SelectItem>
+                    <SelectItem value="all">جميع الدول</SelectItem>
                     {countries?.map(country => (
                       <SelectItem key={country.id} value={country.id.toString()}>
                         {country.name}
@@ -141,7 +141,7 @@ const Scholarships = () => {
                     <SelectValue placeholder="جميع المستويات" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">جميع المستويات</SelectItem>
+                    <SelectItem value="all">جميع المستويات</SelectItem>
                     {levels?.map(level => (
                       <SelectItem key={level.id} value={level.id.toString()}>
                         {level.name}
@@ -161,7 +161,7 @@ const Scholarships = () => {
                     <SelectValue placeholder="جميع الفئات" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">جميع الفئات</SelectItem>
+                    <SelectItem value="all">جميع الفئات</SelectItem>
                     {categories?.map(category => (
                       <SelectItem key={category.id} value={category.id.toString()}>
                         {category.name}
