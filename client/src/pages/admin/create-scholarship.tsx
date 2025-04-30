@@ -140,18 +140,20 @@ const CreateScholarship = () => {
       const response = await apiRequest("POST", "/api/scholarships", values);
       return response.json();
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
+      console.log("Scholarship created successfully:", data);
       toast({
-        title: "Scholarship created",
-        description: "The scholarship has been successfully created.",
+        title: "تم إنشاء المنحة بنجاح",
+        description: "تمت إضافة المنحة الدراسية بنجاح إلى قاعدة البيانات",
       });
-      // إبطال التخزين المؤقت لجميع استعلامات المنح الدراسية
-      queryClient.invalidateQueries({ queryKey: ["/api/scholarships"] });
-      queryClient.invalidateQueries({ queryKey: ["/api/scholarships/featured"] });
-      // إعادة تحميل للاستعلامات بشكل إجباري
-      queryClient.refetchQueries({ queryKey: ["/api/scholarships"] });
-      queryClient.refetchQueries({ queryKey: ["/api/scholarships/featured"] });
-      navigate("/admin/scholarships");
+
+      // إبطال جميع الاستعلامات المتعلقة بالمنح الدراسية
+      queryClient.invalidateQueries();
+      
+      // تأخير قصير قبل التنقل للسماح للاستعلامات بإعادة التحميل
+      setTimeout(() => {
+        navigate("/admin/scholarships");
+      }, 500);
     },
     onError: (error) => {
       toast({
