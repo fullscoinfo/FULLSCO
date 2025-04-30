@@ -6,6 +6,8 @@ import Scholarships from "@/pages/scholarships";
 import ScholarshipDetail from "@/pages/scholarship-detail";
 import Articles from "@/pages/articles";
 import ArticleDetail from "@/pages/article-detail";
+
+// Admin Components - Original
 import AdminDashboard from "@/pages/admin/dashboard";
 import AdminScholarships from "@/pages/admin/scholarships";
 import AdminPosts from "@/pages/admin/posts";
@@ -25,6 +27,11 @@ import AdminBackups from "@/pages/admin/backups";
 import CreateScholarship from "@/pages/admin/create-scholarship";
 import CreatePost from "@/pages/admin/create-post";
 import AdminLogin from "@/pages/admin/login";
+
+// New Admin Components
+import NewDashboard from "@/pages/admin/new-dashboard";
+import NewSiteSettings from "@/pages/admin/new-site-settings";
+
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import { useEffect } from "react";
@@ -34,6 +41,7 @@ function App() {
   // Get current location to determine if we're on an admin page
   const [location] = useLocation();
   const isAdminPage = location.startsWith("/admin");
+  const isNewAdminDashboard = location === "/admin/new";
 
   // Add metadata to document head
   useEffect(() => {
@@ -42,7 +50,17 @@ function App() {
     // تعيين اتجاه الصفحة للغة العربية
     document.documentElement.dir = "rtl";
     document.documentElement.lang = "ar";
+    
+    // مهم: تأكد من أن overflow يعمل بشكل صحيح عند تنظيف المكون
+    return () => {
+      document.body.style.overflow = '';
+    };
   }, []);
+
+  // تأكد من تمكين التمرير عند تغيير المسار
+  useEffect(() => {
+    document.body.style.overflow = '';
+  }, [location]);
 
   // تغليف صفحات لوحة التحكم بمزود الإشعارات
   const wrapInNotificationProvider = (component: React.ReactNode) => {
@@ -68,8 +86,14 @@ function App() {
           <Route path="/articles" component={Articles} />
           <Route path="/articles/:slug" component={ArticleDetail} />
           
-          {/* Admin routes */}
+          {/* Admin Login */}
           <Route path="/admin/login" component={AdminLogin} />
+          
+          {/* New Admin Dashboard */}
+          <Route path="/admin/new" component={NewDashboard} />
+          <Route path="/admin/new/site-settings" component={NewSiteSettings} />
+          
+          {/* Original Admin Routes */}
           <Route path="/admin" component={AdminDashboard} />
           <Route path="/admin/scholarships" component={AdminScholarships} />
           <Route path="/admin/categories" component={AdminCategories} />
