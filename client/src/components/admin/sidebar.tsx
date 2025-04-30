@@ -19,11 +19,14 @@ import {
   MapPin,
   Palette,
   FileEdit,
-  ListTree
+  ListTree,
+  ImageIcon,
+  ShieldCheck
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { NotificationBell } from '@/components/notifications/notification-provider';
 
 type NavItem = {
   href: string;
