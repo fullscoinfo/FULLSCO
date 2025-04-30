@@ -37,6 +37,10 @@ import Footer from "@/components/footer";
 import { useEffect } from "react";
 import { NotificationProvider } from "@/components/notifications/notification-provider";
 import { SiteSettingsProvider } from "@/hooks/use-site-settings";
+import { ScholarshipsProvider } from "@/hooks/use-scholarships";
+import { PostsProvider } from "@/hooks/use-posts";
+import { SuccessStoriesProvider } from "@/hooks/use-success-stories";
+import { FilterOptionsProvider } from "@/hooks/use-filter-options";
 
 function App() {
   // Get current location to determine if we're on an admin page
