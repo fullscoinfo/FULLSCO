@@ -13,7 +13,10 @@ import {
   Menu,
   X,
   Home,
-  FolderTree
+  FolderTree,
+  School,
+  Globe,
+  MapPin
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -29,6 +32,8 @@ const navItems: NavItem[] = [
   { href: '/admin', label: 'لوحة التحكم', icon: LayoutDashboard },
   { href: '/admin/scholarships', label: 'المنح الدراسية', icon: GraduationCap },
   { href: '/admin/categories', label: 'التصنيفات', icon: FolderTree },
+  { href: '/admin/levels', label: 'المستويات الدراسية', icon: School },
+  { href: '/admin/countries', label: 'الدول', icon: Globe },
   { href: '/admin/posts', label: 'المقالات', icon: FileText },
   { href: '/admin/users', label: 'المستخدمين', icon: Users },
   { href: '/admin/settings', label: 'الإعدادات', icon: Settings },
