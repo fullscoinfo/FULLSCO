@@ -109,39 +109,9 @@ export default function SiteSettingsPage() {
     queryKey: ['/api/site-settings'],
     queryFn: async () => {
       try {
-        // سنضيف نقطة نهاية API لاحقًا - في الوقت الحالي استخدم بيانات تجريبية للتطوير
-        // const response = await fetch('/api/site-settings');
-        // if (!response.ok) throw new Error('فشل في استلام إعدادات الموقع');
-        // return response.json();
-        
-        // بيانات تجريبية للعرض أثناء التطوير
-        return {
-          id: 'settings',
-          siteName: 'FULLSCO',
-          siteTagline: 'منصة المنح الدراسية',
-          siteDescription: 'منصة متخصصة في عرض المنح الدراسية حول العالم',
-          favicon: '',
-          logo: '',
-          logoDark: '',
-          email: 'info@fullsco.com',
-          phone: '+1234567890',
-          whatsapp: '',
-          address: 'شارع الرياض، المملكة العربية السعودية',
-          facebook: 'https://facebook.com/fullsco',
-          twitter: 'https://twitter.com/fullsco',
-          instagram: '',
-          youtube: '',
-          linkedin: '',
-          primaryColor: '#3b82f6',
-          secondaryColor: '#10b981',
-          accentColor: '#8b5cf6',
-          enableDarkMode: true,
-          rtlDirection: true,
-          defaultLanguage: 'ar',
-          enableNewsletter: true,
-          enableScholarshipSearch: true,
-          footerText: '© 2025 FULLSCO. جميع الحقوق محفوظة.',
-        } as SiteSettings;
+        const response = await fetch('/api/site-settings');
+        if (!response.ok) throw new Error('فشل في استلام إعدادات الموقع');
+        return response.json();
       } catch (error) {
         console.error('Error fetching site settings:', error);
         throw error;
