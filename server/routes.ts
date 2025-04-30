@@ -675,6 +675,84 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Analytics routes
+  app.get("/api/analytics/visits", isAdmin, async (req, res) => {
+    try {
+      const period = req.query.period as string || 'monthly';
+      const data = await storage.getVisitStats(period);
+      res.json(data);
+    } catch (error) {
+      res.status(500).json({ message: (error as Error).message });
+    }
+  });
+
+  app.get("/api/analytics/posts", isAdmin, async (req, res) => {
+    try {
+      const stats = await storage.getPostStats();
+      res.json(stats);
+    } catch (error) {
+      res.status(500).json({ message: (error as Error).message });
+    }
+  });
+
+  app.get("/api/analytics/scholarships", isAdmin, async (req, res) => {
+    try {
+      const stats = await storage.getScholarshipStats();
+      res.json(stats);
+    } catch (error) {
+      res.status(500).json({ message: (error as Error).message });
+    }
+  });
+
+  app.get("/api/analytics/traffic-sources", isAdmin, async (req, res) => {
+    try {
+      const sources = await storage.getTrafficSources();
+      res.json(sources);
+    } catch (error) {
+      res.status(500).json({ message: (error as Error).message });
+    }
+  });
+
+  app.get("/api/analytics/top-content", isAdmin, async (req, res) => {
+    try {
+      const type = req.query.type as string || 'posts';
+      const limit = parseInt(req.query.limit as string || '5');
+      const content = await storage.getTopContent(type, limit);
+      res.json(content);
+    } catch (error) {
+      res.status(500).json({ message: (error as Error).message });
+    }
+  });
+
+  app.get("/api/analytics/dashboard", isAdmin, async (req, res) => {
+    try {
+      // جمع كل بيانات التحليلات في طلب واحد للوحة المعلومات
+      const period = req.query.period as string || 'monthly';
+      
+      const [visitStats, postStats, scholarshipStats, trafficSources, topPosts, topScholarships] = await Promise.all([
+        storage.getVisitStats(period),
+        storage.getPostStats(),
+        storage.getScholarshipStats(),
+        storage.getTrafficSources(),
+        storage.getTopContent('posts', 5),
+        storage.getTopContent('scholarships', 5)
+      ]);
+      
+      res.json({
+        visitStats,
+        postStats,
+        scholarshipStats,
+        trafficSources,
+        topContent: {
+          posts: topPosts,
+          scholarships: topScholarships
+        }
+      });
+    } catch (error) {
+      res.status(500).json({ message: (error as Error).message });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

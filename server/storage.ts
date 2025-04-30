@@ -821,6 +821,188 @@ export class MemStorage implements IStorage {
     
     return this.siteSettings;
   }
+
+  // Analytics methods
+  async getVisitStats(period: string = 'monthly'): Promise<any> {
+    // في تنفيذ حقيقي، ستكون هذه البيانات معتمدة على زيارات المستخدمين الحقيقية
+    // من سجلات التطبيق أو تحليلات جوجل
+    
+    const periods: Record<string, any[]> = {
+      daily: [
+        { name: 'السبت', visits: 450, articles: 2, scholarships: 1 },
+        { name: 'الأحد', visits: 480, articles: 0, scholarships: 2 },
+        { name: 'الاثنين', visits: 520, articles: 1, scholarships: 0 },
+        { name: 'الثلاثاء', visits: 550, articles: 0, scholarships: 1 },
+        { name: 'الأربعاء', visits: 500, articles: 3, scholarships: 0 },
+        { name: 'الخميس', visits: 480, articles: 1, scholarships: 1 },
+        { name: 'الجمعة', visits: 470, articles: 0, scholarships: 0 },
+      ],
+      weekly: [
+        { name: 'الأسبوع 1', visits: 3200, articles: 8, scholarships: 4 },
+        { name: 'الأسبوع 2', visits: 3500, articles: 5, scholarships: 3 },
+        { name: 'الأسبوع 3', visits: 3800, articles: 7, scholarships: 2 },
+        { name: 'الأسبوع 4', visits: 4100, articles: 6, scholarships: 3 },
+      ],
+      monthly: [
+        { name: 'يناير', visits: 15000, articles: 22, scholarships: 12 },
+        { name: 'فبراير', visits: 16500, articles: 18, scholarships: 10 },
+        { name: 'مارس', visits: 18000, articles: 24, scholarships: 15 },
+        { name: 'أبريل', visits: 17500, articles: 20, scholarships: 18 },
+        { name: 'مايو', visits: 19000, articles: 25, scholarships: 14 },
+        { name: 'يونيو', visits: 21000, articles: 28, scholarships: 16 },
+      ],
+      yearly: [
+        { name: '2023', visits: 180000, articles: 240, scholarships: 150 },
+        { name: '2024', visits: 220000, articles: 320, scholarships: 180 },
+        { name: '2025', visits: 120000, articles: 180, scholarships: 90 }, // جزء من السنة فقط
+      ]
+    };
+
+    // إنشاء لوحة معلومات الإحصائيات بناءً على المقالات والمنح الحالية من قاعدة البيانات
+    // بالإضافة إلى الزيارات المقدرة
+    const postCount = this.posts.size;
+    const scholarshipCount = this.scholarships.size;
+    const subscriberCount = this.subscribers.size;
+
+    const data = {
+      stats: {
+        postCount,
+        scholarshipCount,
+        subscriberCount,
+        totalVisits: period === 'yearly' ? 520000 : (
+          period === 'monthly' ? 107000 : (
+            period === 'weekly' ? 14600 : 3450
+          )
+        ),
+        // نسبة النمو مقارنة بالفترة السابقة
+        growth: {
+          visits: '+12%',
+          posts: '+8%',
+          scholarships: '+5%',
+          subscribers: '+15%',
+        }
+      },
+      // بيانات الزيارات حسب الفترة الزمنية
+      visitData: periods[period] || periods.monthly,
+    };
+
+    return data;
+  }
+
+  async getPostStats(): Promise<any> {
+    const posts = Array.from(this.posts.values());
+    
+    // حساب إجمالي المشاهدات
+    const totalViews = posts.reduce((sum, post) => sum + (post.views || 0), 0);
+    
+    // متوسط المشاهدات لكل مقال
+    const averageViews = posts.length > 0 ? totalViews / posts.length : 0;
+    
+    // المقالات المميزة
+    const featuredCount = posts.filter(post => post.isFeatured).length;
+    
+    // المقالات حسب التاريخ
+    const postsThisMonth = posts.filter(post => {
+      const now = new Date();
+      const postDate = new Date(post.createdAt);
+      return postDate.getMonth() === now.getMonth() && 
+             postDate.getFullYear() === now.getFullYear();
+    }).length;
+
+    return {
+      totalPosts: posts.length,
+      totalViews,
+      averageViews: Math.round(averageViews),
+      featuredCount,
+      postsThisMonth,
+    };
+  }
+
+  async getScholarshipStats(): Promise<any> {
+    const scholarships = Array.from(this.scholarships.values());
+    
+    // المنح حسب مستوى الدراسة
+    const scholarshipsByLevel = scholarships.reduce((acc, scholarship) => {
+      const levelId = scholarship.levelId;
+      if (levelId) {
+        acc[levelId] = (acc[levelId] || 0) + 1;
+      }
+      return acc;
+    }, {} as Record<number, number>);
+    
+    // المنح حسب البلد
+    const scholarshipsByCountry = scholarships.reduce((acc, scholarship) => {
+      const countryId = scholarship.countryId;
+      if (countryId) {
+        acc[countryId] = (acc[countryId] || 0) + 1;
+      }
+      return acc;
+    }, {} as Record<number, number>);
+    
+    // المنح المميزة والممولة بالكامل
+    const featuredCount = scholarships.filter(s => s.isFeatured).length;
+    const fullyFundedCount = scholarships.filter(s => s.isFullyFunded).length;
+    
+    // المنح التي تنتهي قريباً
+    const now = new Date();
+    const upcomingDeadlines = scholarships.filter(s => {
+      if (!s.deadline) return false;
+      const deadlineDate = new Date(s.deadline);
+      const diffTime = deadlineDate.getTime() - now.getTime();
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      return diffDays >= 0 && diffDays <= 30;
+    }).length;
+
+    return {
+      totalScholarships: scholarships.length,
+      scholarshipsByLevel,
+      scholarshipsByCountry,
+      featuredCount,
+      fullyFundedCount,
+      upcomingDeadlines,
+    };
+  }
+
+  async getTrafficSources(): Promise<any> {
+    // في تنفيذ حقيقي، ستأتي هذه البيانات من تحليلات الويب مثل Google Analytics
+    return [
+      { name: 'محركات البحث', value: 65 },
+      { name: 'وسائل التواصل الاجتماعي', value: 20 },
+      { name: 'روابط مباشرة', value: 10 },
+      { name: 'أخرى', value: 5 },
+    ];
+  }
+
+  async getTopContent(type: string = 'posts', limit: number = 5): Promise<any> {
+    if (type === 'posts') {
+      // المقالات الأكثر مشاهدة
+      const posts = Array.from(this.posts.values())
+        .sort((a, b) => (b.views || 0) - (a.views || 0))
+        .slice(0, limit)
+        .map(post => ({
+          id: post.id,
+          name: post.title,
+          views: post.views || 0,
+          slug: post.slug
+        }));
+      
+      return posts;
+    } else if (type === 'scholarships') {
+      // المنح الأكثر زيارة (افتراضية حيث لا نتتبع مشاهدات المنح حاليًا)
+      const scholarships = Array.from(this.scholarships.values())
+        .slice(0, limit)
+        .map(scholarship => ({
+          id: scholarship.id,
+          name: scholarship.title,
+          views: Math.floor(Math.random() * 1000), // قيمة افتراضية للعرض فقط
+          slug: scholarship.slug
+        }));
+      
+      return scholarships;
+    }
+    
+    return [];
+  }
 }
 
 export const storage = new MemStorage();
