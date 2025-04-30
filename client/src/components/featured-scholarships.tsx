@@ -32,22 +32,22 @@ const FeaturedScholarships = () => {
 
   if (isLoading) {
     return (
-      <section className="py-12 bg-white">
+      <section className="py-12 bg-background">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-8 flex items-center justify-between">
-            <h2 className="text-2xl font-bold text-gray-900 sm:text-3xl">Featured Scholarships</h2>
+            <h2 className="text-2xl font-bold sm:text-3xl">المنح الدراسية المميزة</h2>
           </div>
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {[1, 2, 3].map((i) => (
               <Card key={i} className="animate-pulse">
-                <div className="h-48 bg-gray-200"></div>
+                <div className="h-48 bg-muted"></div>
                 <CardContent className="p-5">
-                  <div className="h-4 w-20 bg-gray-200 mb-2 rounded"></div>
-                  <div className="h-6 w-3/4 bg-gray-200 mb-2 rounded"></div>
-                  <div className="h-20 bg-gray-200 mb-4 rounded"></div>
+                  <div className="h-4 w-20 bg-muted mb-2 rounded"></div>
+                  <div className="h-6 w-3/4 bg-muted mb-2 rounded"></div>
+                  <div className="h-20 bg-muted mb-4 rounded"></div>
                   <div className="flex justify-between">
-                    <div className="h-4 w-24 bg-gray-200 rounded"></div>
-                    <div className="h-4 w-24 bg-gray-200 rounded"></div>
+                    <div className="h-4 w-24 bg-muted rounded"></div>
+                    <div className="h-4 w-24 bg-muted rounded"></div>
                   </div>
                 </CardContent>
               </Card>
@@ -60,11 +60,11 @@ const FeaturedScholarships = () => {
 
   if (error || !scholarships) {
     return (
-      <section className="py-12 bg-white">
+      <section className="py-12 bg-background">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h2 className="text-2xl font-bold text-gray-900 sm:text-3xl mb-4">Featured Scholarships</h2>
-            <p className="text-red-500">Failed to load scholarships. Please try again later.</p>
+            <h2 className="text-2xl font-bold sm:text-3xl mb-4">المنح الدراسية المميزة</h2>
+            <p className="text-destructive">فشل في تحميل المنح الدراسية. يرجى المحاولة مرة أخرى لاحقاً.</p>
           </div>
         </div>
       </section>
@@ -72,14 +72,14 @@ const FeaturedScholarships = () => {
   }
 
   return (
-    <section className="py-12 bg-white">
+    <section className="py-12 bg-background">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-8 flex items-center justify-between">
-          <h2 className="text-2xl font-bold text-gray-900 sm:text-3xl">Featured Scholarships</h2>
+          <h2 className="text-2xl font-bold sm:text-3xl">المنح الدراسية المميزة</h2>
           <Link href="/scholarships">
-            <a className="text-primary hover:text-primary-700 font-medium flex items-center">
-              View all <ArrowRight className="ml-1 h-4 w-4" />
-            </a>
+            <span className="text-primary hover:text-primary/90 font-medium flex items-center gap-2">
+              عرض الكل <ArrowRight className="h-4 w-4 rotate-180" />
+            </span>
           </Link>
         </div>
         
@@ -93,37 +93,37 @@ const FeaturedScholarships = () => {
                   className="h-48 w-full object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                <span className="absolute bottom-3 left-3 rounded-full bg-primary px-3 py-1 text-xs font-semibold text-white">
-                  Deadline: {scholarship.deadline || 'Ongoing'}
+                <span className="absolute bottom-3 right-3 rounded-full bg-primary px-3 py-1 text-xs font-semibold text-white">
+                  الموعد النهائي: {scholarship.deadline || 'مستمر'}
                 </span>
                 {scholarship.isFullyFunded && (
-                  <span className="absolute right-3 top-3 rounded-full bg-secondary-500 px-3 py-1 text-xs font-semibold text-white">
-                    Full Funding
+                  <span className="absolute left-3 top-3 rounded-full bg-accent px-3 py-1 text-xs font-semibold text-white">
+                    تمويل كامل
                   </span>
                 )}
               </div>
               <CardContent className="p-5">
                 <div className="mb-2 flex items-center">
                   <Badge variant="country">{getCountryName(scholarship.countryId)}</Badge>
-                  <span className="mx-2 h-1 w-1 rounded-full bg-gray-300"></span>
+                  <span className="mx-2 h-1 w-1 rounded-full bg-border"></span>
                   <Badge variant="secondary">{getLevelName(scholarship.levelId)}</Badge>
                 </div>
-                <h3 className="mb-2 text-xl font-bold text-gray-900 group-hover:text-primary">
+                <h3 className="mb-2 text-xl font-bold group-hover:text-primary">
                   <Link href={`/scholarships/${scholarship.slug}`}>
-                    <a>{scholarship.title}</a>
+                    <span>{scholarship.title}</span>
                   </Link>
                 </h3>
-                <p className="mb-4 text-sm text-gray-600 line-clamp-2">
+                <p className="mb-4 text-sm text-muted-foreground line-clamp-2">
                   {scholarship.description}
                 </p>
                 <div className="mt-auto flex items-center justify-between">
-                  <span className="text-sm font-medium text-gray-700">
-                    <DollarSign className="mr-1 h-4 w-4 inline text-secondary-500" /> {scholarship.amount || 'Varies'}
+                  <span className="text-sm font-medium">
+                    <DollarSign className="ml-1 h-4 w-4 inline text-accent" /> {scholarship.amount || 'متغير'}
                   </span>
                   <Link href={`/scholarships/${scholarship.slug}`}>
-                    <a className="flex items-center text-sm font-medium text-primary hover:text-primary-700">
-                      Learn more <ArrowRight className="ml-1 h-4 w-4" />
-                    </a>
+                    <span className="flex items-center gap-2 text-sm font-medium text-primary hover:text-primary/90">
+                      اقرأ المزيد <ArrowRight className="h-4 w-4 rotate-180" />
+                    </span>
                   </Link>
                 </div>
               </CardContent>

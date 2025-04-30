@@ -10,38 +10,38 @@ import {
 
 const categories = [
   {
-    title: 'By Degree Level',
-    description: 'Undergraduate, Masters, PhD',
+    title: 'حسب المستوى الدراسي',
+    description: 'بكالوريوس، ماجستير، دكتوراه',
     icon: GraduationCap,
     link: '/scholarships?type=degree'
   },
   {
-    title: 'By Destination',
-    description: 'USA, UK, Canada, Australia, Europe',
+    title: 'حسب الوجهة',
+    description: 'الولايات المتحدة، المملكة المتحدة، كندا، أستراليا، أوروبا',
     icon: MapPin,
     link: '/scholarships?type=destination'
   },
   {
-    title: 'By Field of Study',
-    description: 'Engineering, Medicine, Business, Arts',
+    title: 'حسب مجال الدراسة',
+    description: 'الهندسة، الطب، الأعمال، الفنون',
     icon: BookOpen,
     link: '/scholarships?type=field'
   },
   {
-    title: 'By Funding Type',
-    description: 'Full Funding, Partial, Research Grants',
+    title: 'حسب نوع التمويل',
+    description: 'تمويل كامل، جزئي، منح بحثية',
     icon: BarChart,
     link: '/scholarships?type=funding'
   },
   {
-    title: 'By Eligibility',
-    description: 'International Students, Nationality-Specific',
+    title: 'حسب الأهلية',
+    description: 'الطلاب الدوليين، حسب الجنسية',
     icon: Users,
     link: '/scholarships?type=eligibility'
   },
   {
-    title: 'Upcoming Deadlines',
-    description: 'Applications closing soon',
+    title: 'المواعيد النهائية القادمة',
+    description: 'طلبات التقديم تقترب من الإغلاق',
     icon: Calendar,
     link: '/scholarships?type=deadline'
   }
@@ -49,26 +49,26 @@ const categories = [
 
 const ScholarshipCategories = () => {
   return (
-    <section className="py-12 bg-gray-50">
+    <section className="py-12 bg-muted/50">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-10">
-          <h2 className="text-2xl font-bold text-gray-900 sm:text-3xl mb-4">Browse Scholarships by Category</h2>
-          <p className="text-gray-600 max-w-2xl mx-auto">Find scholarship opportunities that match your academic interests, destination country, or degree level.</p>
+          <h2 className="text-2xl font-bold sm:text-3xl mb-4">تصفح المنح الدراسية حسب الفئة</h2>
+          <p className="text-muted-foreground max-w-2xl mx-auto">اعثر على فرص المنح الدراسية التي تتناسب مع اهتماماتك الأكاديمية، أو بلد الوجهة، أو المستوى الدراسي.</p>
         </div>
         
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {categories.map((category, index) => (
             <Link key={index} href={category.link}>
-              <a className="group flex items-center p-4 bg-white rounded-lg border border-gray-200 hover:border-primary-300 hover:bg-primary-50 transition-all">
-                <div className="mr-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary-100 text-primary group-hover:bg-primary group-hover:text-white">
+              <div className="group flex items-center p-4 bg-card rounded-lg border border-border hover:border-primary/30 hover:bg-primary/5 transition-all">
+                <div className="ml-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary group-hover:bg-primary group-hover:text-white">
                   <category.icon className="h-5 w-5" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-gray-900">{category.title}</h3>
-                  <p className="text-sm text-gray-600">{category.description}</p>
+                  <h3 className="font-semibold">{category.title}</h3>
+                  <p className="text-sm text-muted-foreground">{category.description}</p>
                 </div>
-                <ArrowRight className="ml-auto text-gray-400 group-hover:text-primary h-4 w-4" />
-              </a>
+                <ArrowRight className="mr-auto text-muted-foreground group-hover:text-primary h-4 w-4 rotate-180" />
+              </div>
             </Link>
           ))}
         </div>

@@ -8,18 +8,18 @@ import Newsletter from '@/components/newsletter';
 import AdminPreview from '@/components/admin-preview';
 
 const Home = () => {
-  // Set page metadata
+  // تعيين بيانات الصفحة التعريفية
   useEffect(() => {
-    document.title = "FULLSCO - Find Your Perfect Scholarship Opportunity";
+    document.title = "FULLSCO - اعثر على فرصة المنحة الدراسية المثالية";
     
-    // You can add more metadata here when implementing SEO
+    // يمكنك إضافة المزيد من البيانات الوصفية هنا عند تنفيذ تحسين محركات البحث SEO
     const metaDescription = document.querySelector('meta[name="description"]');
     if (metaDescription) {
-      metaDescription.setAttribute('content', 'Discover thousands of scholarships worldwide and get guidance on how to apply successfully.');
+      metaDescription.setAttribute('content', 'اكتشف آلاف المنح الدراسية حول العالم واحصل على إرشادات حول كيفية التقديم بنجاح.');
     } else {
       const meta = document.createElement('meta');
       meta.name = 'description';
-      meta.content = 'Discover thousands of scholarships worldwide and get guidance on how to apply successfully.';
+      meta.content = 'اكتشف آلاف المنح الدراسية حول العالم واحصل على إرشادات حول كيفية التقديم بنجاح.';
       document.head.appendChild(meta);
     }
   }, []);
