@@ -21,7 +21,8 @@ import {
   FileEdit,
   ListTree,
   ImageIcon,
-  ShieldCheck
+  ShieldCheck,
+  Database
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -47,13 +48,16 @@ const navItems: NavItem[] = [
   { href: '/admin/posts', label: 'المقالات', icon: FileText },
   { href: '/admin/pages', label: 'الصفحات الثابتة', icon: FileEdit },
   { href: '/admin/menus', label: 'القوائم والروابط', icon: ListTree },
+  { href: '/admin/media', label: 'مكتبة الوسائط', icon: ImageIcon },
   
   // إعدادات وتحليلات
   { href: '/admin/users', label: 'المستخدمين', icon: Users },
+  { href: '/admin/roles', label: 'الأدوار والتصاريح', icon: ShieldCheck },
   { href: '/admin/site-settings', label: 'إعدادات الموقع', icon: Palette },
   { href: '/admin/settings', label: 'الإعدادات العامة', icon: Settings },
   { href: '/admin/seo', label: 'تحسين محركات البحث', icon: Search },
   { href: '/admin/analytics', label: 'التحليلات', icon: BarChart },
+  { href: '/admin/backups', label: 'النسخ الاحتياطي', icon: Database },
 ];
 
 interface SidebarProps {
@@ -156,6 +160,7 @@ const Sidebar = ({ isMobileOpen, onClose }: SidebarProps) => {
             </span>
             <span className="text-xs text-sidebar-foreground/60 mr-1">المدير</span>
           </Link>
+          <NotificationBell />
         </div>
         
         {/* قائمة التنقل */}

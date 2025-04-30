@@ -107,14 +107,34 @@ const CreateScholarship = () => {
       }
 
       // Convert string IDs to numbers
-      if (values.countryId && typeof values.countryId === "string") {
-        values.countryId = parseInt(values.countryId);
+      if (values.countryId) {
+        if (typeof values.countryId === "string") {
+          values.countryId = parseInt(values.countryId, 10);
+        }
+        // Ensure it's a valid number
+        if (isNaN(values.countryId)) {
+          delete values.countryId;
+        }
       }
-      if (values.levelId && typeof values.levelId === "string") {
-        values.levelId = parseInt(values.levelId);
+      
+      if (values.levelId) {
+        if (typeof values.levelId === "string") {
+          values.levelId = parseInt(values.levelId, 10);
+        }
+        // Ensure it's a valid number
+        if (isNaN(values.levelId)) {
+          delete values.levelId;
+        }
       }
-      if (values.categoryId && typeof values.categoryId === "string") {
-        values.categoryId = parseInt(values.categoryId);
+      
+      if (values.categoryId) {
+        if (typeof values.categoryId === "string") {
+          values.categoryId = parseInt(values.categoryId, 10);
+        }
+        // Ensure it's a valid number
+        if (isNaN(values.categoryId)) {
+          delete values.categoryId;
+        }
       }
 
       const response = await apiRequest("POST", "/api/scholarships", values);

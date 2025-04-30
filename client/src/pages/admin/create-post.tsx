@@ -81,7 +81,11 @@ const CreatePost = () => {
   // Set author ID when user is loaded
   useEffect(() => {
     if (user?.id) {
-      form.setValue("authorId", user.id);
+      // Make sure user.id is a number
+      const authorId = typeof user.id === 'string' ? parseInt(user.id, 10) : user.id;
+      if (!isNaN(authorId)) {
+        form.setValue("authorId", authorId);
+      }
     }
   }, [user, form]);
 
