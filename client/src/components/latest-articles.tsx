@@ -17,27 +17,27 @@ const LatestArticles = () => {
   });
 
   const getAuthorName = (authorId?: number) => {
-    if (!authorId || !users) return 'FULLSCO Team';
+    if (!authorId || !users) return 'فريق FULLSCO';
     const author = users.find(u => u.id === authorId);
-    return author?.fullName || 'FULLSCO Team';
+    return author?.fullName || 'فريق FULLSCO';
   };
 
   if (isLoading) {
     return (
-      <section className="py-12 bg-white">
+      <section className="py-12 bg-background">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-8 flex items-center justify-between">
-            <h2 className="text-2xl font-bold text-gray-900 sm:text-3xl">Latest Articles & Guides</h2>
+            <h2 className="text-2xl font-bold sm:text-3xl">أحدث المقالات والإرشادات</h2>
           </div>
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {[1, 2, 3].map((i) => (
               <Card key={i} className="animate-pulse">
-                <div className="h-48 bg-gray-200"></div>
+                <div className="h-48 bg-muted"></div>
                 <div className="p-5">
-                  <div className="h-4 w-20 bg-gray-200 mb-2 rounded"></div>
-                  <div className="h-6 w-3/4 bg-gray-200 mb-2 rounded"></div>
-                  <div className="h-20 bg-gray-200 mb-4 rounded"></div>
-                  <div className="h-8 w-32 bg-gray-200 rounded"></div>
+                  <div className="h-4 w-20 bg-muted mb-2 rounded"></div>
+                  <div className="h-6 w-3/4 bg-muted mb-2 rounded"></div>
+                  <div className="h-20 bg-muted mb-4 rounded"></div>
+                  <div className="h-8 w-32 bg-muted rounded"></div>
                 </div>
               </Card>
             ))}
@@ -49,11 +49,11 @@ const LatestArticles = () => {
 
   if (error || !posts) {
     return (
-      <section className="py-12 bg-white">
+      <section className="py-12 bg-background">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h2 className="text-2xl font-bold text-gray-900 sm:text-3xl mb-4">Latest Articles & Guides</h2>
-            <p className="text-red-500">Failed to load articles. Please try again later.</p>
+            <h2 className="text-2xl font-bold sm:text-3xl mb-4">أحدث المقالات والإرشادات</h2>
+            <p className="text-destructive">فشل في تحميل المقالات. يرجى المحاولة مرة أخرى لاحقاً.</p>
           </div>
         </div>
       </section>
@@ -61,14 +61,14 @@ const LatestArticles = () => {
   }
 
   return (
-    <section className="py-12 bg-white">
+    <section className="py-12 bg-background">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-8 flex items-center justify-between">
-          <h2 className="text-2xl font-bold text-gray-900 sm:text-3xl">Latest Articles & Guides</h2>
+          <h2 className="text-2xl font-bold sm:text-3xl">أحدث المقالات والإرشادات</h2>
           <Link href="/articles">
-            <a className="text-primary hover:text-primary-700 font-medium flex items-center">
-              View all <ArrowRight className="ml-1 h-4 w-4" />
-            </a>
+            <span className="text-primary hover:text-primary/90 font-medium flex items-center gap-2">
+              عرض الكل <ArrowRight className="h-4 w-4 rotate-180" />
+            </span>
           </Link>
         </div>
         
@@ -82,26 +82,26 @@ const LatestArticles = () => {
               />
               <div className="p-5">
                 <div className="mb-2 flex items-center">
-                  <Badge variant="secondary" className="rounded-full">Guide</Badge>
-                  <span className="mx-2 text-xs text-gray-500">{formatDate(post.createdAt)}</span>
-                  <span className="text-xs text-gray-500 flex items-center">
-                    <Eye className="mr-1 h-3 w-3" /> {post.views || 0}
+                  <Badge variant="secondary" className="rounded-full">دليل</Badge>
+                  <span className="mx-2 text-xs text-muted-foreground">{formatDate(post.createdAt)}</span>
+                  <span className="text-xs text-muted-foreground flex items-center">
+                    <Eye className="ml-1 h-3 w-3" /> {post.views || 0}
                   </span>
                 </div>
-                <h3 className="mb-2 text-xl font-bold text-gray-900">
+                <h3 className="mb-2 text-xl font-bold">
                   <Link href={`/articles/${post.slug}`}>
-                    <a className="hover:text-primary">{post.title}</a>
+                    <span className="hover:text-primary">{post.title}</span>
                   </Link>
                 </h3>
-                <p className="mb-4 text-sm text-gray-600 line-clamp-3">
+                <p className="mb-4 text-sm text-muted-foreground line-clamp-3">
                   {post.excerpt || post.content}
                 </p>
                 <div className="flex items-center">
-                  <Avatar className="h-8 w-8 mr-2">
+                  <Avatar className="h-8 w-8 ml-2">
                     <AvatarImage src="https://randomuser.me/api/portraits/men/1.jpg" alt={getAuthorName(post.authorId)} />
                     <AvatarFallback>{getInitials(getAuthorName(post.authorId))}</AvatarFallback>
                   </Avatar>
-                  <span className="text-sm font-medium text-gray-700">{getAuthorName(post.authorId)}</span>
+                  <span className="text-sm font-medium">{getAuthorName(post.authorId)}</span>
                 </div>
               </div>
             </Card>
