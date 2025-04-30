@@ -69,50 +69,74 @@ export function SiteSettingsProvider({ children }: { children: ReactNode }) {
       document.documentElement.lang = settings.defaultLanguage || 'ar';
       
       // تطبيق الألوان على المتغيرات في CSS
-      if (settings.primaryColor) {
-        // تطبيق لون أساسي كمتغير CSS
-        document.documentElement.style.setProperty('--primary', settings.primaryColor);
+      // تحويل ألوان hex إلى HSL للاستفادة من نظام الألوان في tailwind
+      const hexToHSL = (hex: string) => {
+        // إزالة # من بداية اللون
+        const hexColor = hex.replace('#', '');
         
-        // تحويل اللون الأساسي إلى hsl للاستفادة من نظام الألوان في tailwind
-        try {
-          // محاولة استخراج القيم من لون hex
-          const hexColor = settings.primaryColor.replace('#', '');
-          const r = parseInt(hexColor.substr(0, 2), 16) / 255;
-          const g = parseInt(hexColor.substr(2, 2), 16) / 255;
-          const b = parseInt(hexColor.substr(4, 2), 16) / 255;
-          
-          // حساب القيم HSL
-          const max = Math.max(r, g, b);
-          const min = Math.min(r, g, b);
-          let h = 0, s = 0, l = (max + min) / 2;
+        // تحويل RGB إلى مقياس [0-1]
+        const r = parseInt(hexColor.substr(0, 2), 16) / 255;
+        const g = parseInt(hexColor.substr(2, 2), 16) / 255;
+        const b = parseInt(hexColor.substr(4, 2), 16) / 255;
+        
+        // حساب القيم HSL
+        const max = Math.max(r, g, b);
+        const min = Math.min(r, g, b);
+        let h = 0, s = 0, l = (max + min) / 2;
 
-          if (max !== min) {
-            const d = max - min;
-            s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-            
-            if (max === r) h = (g - b) / d + (g < b ? 6 : 0);
-            else if (max === g) h = (b - r) / d + 2;
-            else h = (r - g) / d + 4;
-            
-            h *= 60;
-          }
+        if (max !== min) {
+          const d = max - min;
+          s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
           
-          // تطبيق HSL على متغيرات الألوان
-          document.documentElement.style.setProperty('--primary-hue', `${h.toFixed(0)}deg`);
-          document.documentElement.style.setProperty('--primary-saturation', `${(s * 100).toFixed(0)}%`);
-          document.documentElement.style.setProperty('--primary-lightness', `${(l * 100).toFixed(0)}%`);
+          if (max === r) h = (g - b) / d + (g < b ? 6 : 0);
+          else if (max === g) h = (b - r) / d + 2;
+          else h = (r - g) / d + 4;
+          
+          h *= 60;
+        }
+        
+        return {
+          h: Math.round(h),
+          s: Math.round(s * 100),
+          l: Math.round(l * 100)
+        };
+      };
+      
+      // تطبيق اللون الأساسي
+      if (settings.primaryColor) {
+        try {
+          const hsl = hexToHSL(settings.primaryColor);
+          // تطبيق قيم HSL مباشرة على متغير الألوان الرئيسي
+          document.documentElement.style.setProperty('--primary', `${hsl.h} ${hsl.s}% ${hsl.l}%`);
+          console.log(`Applied primary color: ${hsl.h} ${hsl.s}% ${hsl.l}%`);
         } catch (e) {
           console.error('Error parsing primary color:', e);
         }
       }
       
+      // تطبيق اللون الثانوي
       if (settings.secondaryColor) {
-        document.documentElement.style.setProperty('--secondary', settings.secondaryColor);
+        try {
+          const hsl = hexToHSL(settings.secondaryColor);
+          document.documentElement.style.setProperty('--secondary', `${hsl.h} ${hsl.s}% ${hsl.l}%`);
+          console.log(`Applied secondary color: ${hsl.h} ${hsl.s}% ${hsl.l}%`);
+        } catch (e) {
+          console.error('Error parsing secondary color:', e);
+        }
       }
       
+      // تطبيق لون التمييز
       if (settings.accentColor) {
-        document.documentElement.style.setProperty('--accent', settings.accentColor);
-        document.documentElement.style.setProperty('--accent-foreground', '#ffffff');
+        try {
+          const hsl = hexToHSL(settings.accentColor);
+          document.documentElement.style.setProperty('--accent', `${hsl.h} ${hsl.s}% ${hsl.l}%`);
+          console.log(`Applied accent color: ${hsl.h} ${hsl.s}% ${hsl.l}%`);
+          
+          // تعيين لون النص المناسب للأزرار ذات لون التمييز
+          document.documentElement.style.setProperty('--accent-foreground', '0 0% 100%');
+        } catch (e) {
+          console.error('Error parsing accent color:', e);
+        }
       }
       
       // تطبيق أيقونة الموقع (favicon)
