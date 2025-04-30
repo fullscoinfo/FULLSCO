@@ -52,9 +52,9 @@ function App() {
   useEffect(() => {
     document.title = "FULLSCO - منصة المنح الدراسية";
     
-    // تعيين اتجاه الصفحة للغة العربية
-    document.documentElement.dir = "rtl";
-    document.documentElement.lang = "ar";
+    // ملاحظة: لا نقوم بتعيين dir و lang هنا
+    // لأنه سيتم تعيينها عن طريق SiteSettingsProvider
+    // وفقاً للإعدادات المخزنة في قاعدة البيانات
     
     // مهم: تأكد من أن overflow يعمل بشكل صحيح عند تنظيف المكون
     return () => {
