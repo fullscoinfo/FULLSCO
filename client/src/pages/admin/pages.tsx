@@ -88,82 +88,19 @@ export default function PagesManagementPage() {
 
   // استلام الصفحات من الخادم
   const { data: pages, isLoading, isError, refetch } = useQuery<Page[]>({
-    queryKey: ['/api/pages'],
+    queryKey: ['/api/admin/pages'],
     queryFn: async () => {
       try {
-        // سنضيف نقطة نهاية API لاحقًا - في الوقت الحالي استخدم بيانات تجريبية للتطوير
-        // const response = await fetch('/api/pages');
-        // if (!response.ok) throw new Error('فشل في استلام الصفحات');
-        // return response.json();
+        const response = await fetch('/api/admin/pages', {
+          credentials: 'include' // لإرسال معلومات الجلسة
+        });
         
-        // بيانات تجريبية للعرض أثناء التطوير
-        return [
-          {
-            id: 1,
-            title: 'من نحن',
-            slug: 'about',
-            content: '<h1>من نحن</h1><p>مرحبًا بك في منصة FULLSCO، المنصة الرائدة للمنح الدراسية حول العالم.</p><p>نسعى لتوفير أفضل الفرص التعليمية للطلاب من جميع أنحاء العالم.</p>',
-            metaTitle: 'من نحن | FULLSCO',
-            metaDescription: 'تعرف على منصة FULLSCO للمنح الدراسية وفريق العمل والرؤية والأهداف',
-            isPublished: true,
-            showInFooter: true,
-            showInHeader: true,
-            createdAt: '2025-01-01T00:00:00Z',
-            updatedAt: '2025-01-15T00:00:00Z',
-          },
-          {
-            id: 2,
-            title: 'الشروط والأحكام',
-            slug: 'terms',
-            content: '<h1>الشروط والأحكام</h1><p>يرجى قراءة هذه الشروط والأحكام بعناية قبل استخدام منصة FULLSCO.</p><p>باستخدامك للموقع، فإنك توافق على الالتزام بجميع الشروط والأحكام المذكورة هنا.</p>',
-            metaTitle: 'الشروط والأحكام | FULLSCO',
-            metaDescription: 'الشروط والأحكام الخاصة باستخدام منصة FULLSCO للمنح الدراسية',
-            isPublished: true,
-            showInFooter: true,
-            showInHeader: false,
-            createdAt: '2025-01-01T00:00:00Z',
-            updatedAt: '2025-02-10T00:00:00Z',
-          },
-          {
-            id: 3,
-            title: 'سياسة الخصوصية',
-            slug: 'privacy',
-            content: '<h1>سياسة الخصوصية</h1><p>نحن نهتم بخصوصية مستخدمينا. تصف هذه السياسة كيفية جمع واستخدام وحماية معلوماتك الشخصية.</p>',
-            metaTitle: 'سياسة الخصوصية | FULLSCO',
-            metaDescription: 'تعرف على كيفية جمع واستخدام وحماية بياناتك الشخصية على منصة FULLSCO',
-            isPublished: true,
-            showInFooter: true,
-            showInHeader: false,
-            createdAt: '2025-01-01T00:00:00Z',
-            updatedAt: '2025-01-20T00:00:00Z',
-          },
-          {
-            id: 4,
-            title: 'الأسئلة الشائعة',
-            slug: 'faq',
-            content: '<h1>الأسئلة الشائعة</h1><p>تجد هنا إجابات على الأسئلة الشائعة حول منصة FULLSCO والمنح الدراسية.</p>',
-            metaTitle: 'الأسئلة الشائعة | FULLSCO',
-            metaDescription: 'إجابات على الأسئلة الشائعة حول منصة FULLSCO والمنح الدراسية',
-            isPublished: true,
-            showInFooter: true,
-            showInHeader: false,
-            createdAt: '2025-01-05T00:00:00Z',
-            updatedAt: '2025-02-15T00:00:00Z',
-          },
-          {
-            id: 5,
-            title: 'صفحة قيد الإنشاء',
-            slug: 'draft-page',
-            content: '<h1>صفحة قيد الإنشاء</h1><p>هذه الصفحة غير منشورة وقيد الإنشاء.</p>',
-            metaTitle: '',
-            metaDescription: '',
-            isPublished: false,
-            showInFooter: false,
-            showInHeader: false,
-            createdAt: '2025-03-01T00:00:00Z',
-            updatedAt: '2025-03-01T00:00:00Z',
-          },
-        ] as Page[];
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          throw new Error(errorData.message || 'فشل في استلام الصفحات');
+        }
+        
+        return response.json();
       } catch (error) {
         console.error('Error fetching pages:', error);
         throw error;
@@ -185,29 +122,23 @@ export default function PagesManagementPage() {
   // إضافة صفحة جديدة
   const addMutation = useMutation({
     mutationFn: async (newPage: PageFormValues) => {
-      // سيتم إضافة نقطة نهاية API لاحقًا
-      // const response = await fetch('/api/pages', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify(newPage),
-      // });
-      // if (!response.ok) throw new Error('فشل في إضافة الصفحة');
-      // return response.json();
+      const response = await fetch('/api/pages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newPage),
+        credentials: 'include'
+      });
       
-      // محاكاة استجابة API
-      const now = new Date().toISOString();
-      const id = Math.max(0, ...pages?.map(page => page.id) || []) + 1;
-      return { 
-        ...newPage, 
-        id, 
-        createdAt: now, 
-        updatedAt: now 
-      } as Page;
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || 'فشل في إضافة الصفحة');
+      }
+      
+      return response.json();
     },
     onSuccess: (newPage) => {
-      queryClient.setQueryData(['/api/pages'], (old: Page[] | undefined) => 
-        [...(old || []), newPage]
-      );
+      // تحديث ذاكرة التخزين المؤقت
+      queryClient.invalidateQueries({ queryKey: ['/api/admin/pages'] });
       toast({ title: 'تم الإضافة بنجاح', description: 'تمت إضافة الصفحة الجديدة بنجاح' });
       setIsAddDialogOpen(false);
     },
@@ -219,35 +150,24 @@ export default function PagesManagementPage() {
   // تعديل صفحة
   const updateMutation = useMutation({
     mutationFn: async (updatedPage: PageFormValues & { id: number }) => {
-      // سيتم إضافة نقطة نهاية API لاحقًا
-      // const { id, ...pageData } = updatedPage;
-      // const response = await fetch(`/api/pages/${id}`, {
-      //   method: 'PUT',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify(pageData),
-      // });
-      // if (!response.ok) throw new Error('فشل في تحديث الصفحة');
-      // return response.json();
-      
-      // محاكاة استجابة API
-      const now = new Date().toISOString();
       const { id, ...pageData } = updatedPage;
-      const existingPage = pages?.find(page => page.id === id);
+      const response = await fetch(`/api/pages/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(pageData),
+        credentials: 'include'
+      });
       
-      if (!existingPage) {
-        throw new Error('الصفحة غير موجودة');
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || 'فشل في تحديث الصفحة');
       }
       
-      return { 
-        ...existingPage,
-        ...pageData,
-        updatedAt: now
-      } as Page;
+      return response.json();
     },
-    onSuccess: (updatedPage) => {
-      queryClient.setQueryData(['/api/pages'], (old: Page[] | undefined) => 
-        (old || []).map(page => page.id === updatedPage.id ? updatedPage : page)
-      );
+    onSuccess: () => {
+      // تحديث ذاكرة التخزين المؤقت
+      queryClient.invalidateQueries({ queryKey: ['/api/admin/pages'] });
       toast({ title: 'تم التحديث بنجاح', description: 'تم تحديث الصفحة بنجاح' });
       setIsEditDialogOpen(false);
       setSelectedPage(null);
@@ -260,20 +180,21 @@ export default function PagesManagementPage() {
   // حذف صفحة
   const deleteMutation = useMutation({
     mutationFn: async (id: number) => {
-      // سيتم إضافة نقطة نهاية API لاحقًا
-      // const response = await fetch(`/api/pages/${id}`, {
-      //   method: 'DELETE',
-      // });
-      // if (!response.ok) throw new Error('فشل في حذف الصفحة');
-      // return response.json();
+      const response = await fetch(`/api/pages/${id}`, {
+        method: 'DELETE',
+        credentials: 'include'
+      });
       
-      // محاكاة استجابة API
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || 'فشل في حذف الصفحة');
+      }
+      
       return { success: true, id };
     },
-    onSuccess: (data) => {
-      queryClient.setQueryData(['/api/pages'], (old: Page[] | undefined) => 
-        (old || []).filter(page => page.id !== data.id)
-      );
+    onSuccess: () => {
+      // تحديث ذاكرة التخزين المؤقت
+      queryClient.invalidateQueries({ queryKey: ['/api/admin/pages'] });
       toast({ title: 'تم الحذف بنجاح', description: 'تم حذف الصفحة بنجاح' });
       setIsDeleteDialogOpen(false);
       setSelectedPage(null);
@@ -286,33 +207,23 @@ export default function PagesManagementPage() {
   // تغيير حالة النشر للصفحة
   const togglePublishMutation = useMutation({
     mutationFn: async ({ id, isPublished }: { id: number, isPublished: boolean }) => {
-      // سيتم إضافة نقطة نهاية API لاحقًا
-      // const response = await fetch(`/api/pages/${id}/publish`, {
-      //   method: 'PUT',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify({ isPublished }),
-      // });
-      // if (!response.ok) throw new Error('فشل في تغيير حالة النشر');
-      // return response.json();
+      const response = await fetch(`/api/pages/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ isPublished }),
+        credentials: 'include'
+      });
       
-      // محاكاة استجابة API
-      const now = new Date().toISOString();
-      const existingPage = pages?.find(page => page.id === id);
-      
-      if (!existingPage) {
-        throw new Error('الصفحة غير موجودة');
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || 'فشل في تغيير حالة النشر');
       }
       
-      return { 
-        ...existingPage,
-        isPublished,
-        updatedAt: now
-      } as Page;
+      return await response.json();
     },
-    onSuccess: (updatedPage) => {
-      queryClient.setQueryData(['/api/pages'], (old: Page[] | undefined) => 
-        (old || []).map(page => page.id === updatedPage.id ? updatedPage : page)
-      );
+    onSuccess: (updatedPage: Page) => {
+      // تحديث ذاكرة التخزين المؤقت
+      queryClient.invalidateQueries({ queryKey: ['/api/admin/pages'] });
       toast({ 
         title: updatedPage.isPublished ? 'تم النشر بنجاح' : 'تم إلغاء النشر', 
         description: updatedPage.isPublished ? 'الصفحة الآن منشورة ومتاحة للزوار' : 'الصفحة الآن غير منشورة' 
