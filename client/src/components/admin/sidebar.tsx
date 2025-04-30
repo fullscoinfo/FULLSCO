@@ -53,7 +53,7 @@ const navItems: NavItem[] = [
   // إعدادات وتحليلات
   { href: '/admin/users', label: 'المستخدمين', icon: Users },
   { href: '/admin/roles', label: 'الأدوار والتصاريح', icon: ShieldCheck },
-  { href: '/admin/site-settings', label: 'إعدادات الموقع', icon: Palette },
+  { href: '/admin/site-settings', label: 'تخصيص الموقع', icon: Palette },
   { href: '/admin/settings', label: 'الإعدادات العامة', icon: Settings },
   { href: '/admin/seo', label: 'تحسين محركات البحث', icon: Search },
   { href: '/admin/analytics', label: 'التحليلات', icon: BarChart },

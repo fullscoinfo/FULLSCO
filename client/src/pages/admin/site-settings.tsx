@@ -253,7 +253,7 @@ export default function SiteSettingsPage() {
                   <Menu className="h-5 w-5" />
                 </Button>
               )}
-              <h1 className="text-xl md:text-2xl font-bold">إعدادات الموقع</h1>
+              <h1 className="text-xl md:text-2xl font-bold">تخصيص الموقع</h1>
             </div>
             <div className="flex gap-2">
               <Button variant="outline" onClick={() => refetch()}>
