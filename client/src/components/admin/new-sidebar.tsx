@@ -179,7 +179,7 @@ const Sidebar = ({ isMobileOpen, onClose }: SidebarProps) => {
       <aside 
         ref={sidebarRef}
         className={cn(
-          "bg-background flex flex-col border-l shadow-lg z-50 transition-all duration-300 ease-in-out",
+          "bg-background flex flex-col border-r shadow-lg z-50 transition-all duration-300 ease-in-out",
           isMobile 
             ? "fixed inset-y-0 right-0 w-72 transform" 
             : "w-64 h-screen sticky top-0"
@@ -194,7 +194,7 @@ const Sidebar = ({ isMobileOpen, onClose }: SidebarProps) => {
         {/* زر الإغلاق - تم تغيير الموضع ليناسب الاتجاه العربي RTL */}
         {isMobile && (
           <button 
-            className="absolute -right-10 top-4 bg-primary text-primary-foreground p-2 rounded-r-md" 
+            className="absolute -left-10 top-4 bg-primary text-primary-foreground p-2 rounded-l-md" 
             onClick={onClose}
             aria-label="إغلاق القائمة"
           >
@@ -208,7 +208,7 @@ const Sidebar = ({ isMobileOpen, onClose }: SidebarProps) => {
             <span className="text-xl font-bold">
               FULL<span className="text-primary">SCO</span>
             </span>
-            <span className="text-xs text-muted-foreground mr-1">المدير</span>
+            <span className="text-xs text-muted-foreground ml-1">المدير</span>
           </Link>
           <NotificationBell />
         </div>
@@ -222,7 +222,7 @@ const Sidebar = ({ isMobileOpen, onClose }: SidebarProps) => {
                 "w-full justify-start px-3 py-2 h-auto text-sm rounded-md mb-4",
               )}
             >
-              <Home className="ml-2 h-4 w-4" />
+              <Home className="mr-2 h-4 w-4" />
               العودة للموقع
             </Button>
           </Link>
@@ -239,7 +239,7 @@ const Sidebar = ({ isMobileOpen, onClose }: SidebarProps) => {
                         "w-full justify-start px-3 py-2 h-auto text-sm rounded-md my-1",
                       )}
                     >
-                      <item.icon className="ml-2 h-4 w-4" />
+                      <item.icon className="mr-2 h-4 w-4" />
                       {item.label}
                     </Button>
                   </Link>
@@ -264,7 +264,7 @@ const Sidebar = ({ isMobileOpen, onClose }: SidebarProps) => {
                         className="w-full justify-between px-3 py-2 h-auto text-sm rounded-md my-1"
                       >
                         <div className="flex items-center">
-                          <item.icon className="ml-2 h-4 w-4" />
+                          <item.icon className="mr-2 h-4 w-4" />
                           {item.label}
                         </div>
                         {isExpanded ? (
