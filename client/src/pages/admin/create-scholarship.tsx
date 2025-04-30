@@ -145,7 +145,12 @@ const CreateScholarship = () => {
         title: "Scholarship created",
         description: "The scholarship has been successfully created.",
       });
+      // إبطال التخزين المؤقت لجميع استعلامات المنح الدراسية
       queryClient.invalidateQueries({ queryKey: ["/api/scholarships"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/scholarships/featured"] });
+      // إعادة تحميل للاستعلامات بشكل إجباري
+      queryClient.refetchQueries({ queryKey: ["/api/scholarships"] });
+      queryClient.refetchQueries({ queryKey: ["/api/scholarships/featured"] });
       navigate("/admin/scholarships");
     },
     onError: (error) => {
