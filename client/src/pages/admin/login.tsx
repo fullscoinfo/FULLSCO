@@ -19,8 +19,8 @@ import { LockKeyhole, User } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 const loginSchema = z.object({
-  username: z.string().min(1, 'Username is required'),
-  password: z.string().min(1, 'Password is required'),
+  username: z.string().min(1, 'اسم المستخدم مطلوب'),
+  password: z.string().min(1, 'كلمة المرور مطلوبة'),
 });
 
 type LoginFormValues = z.infer<typeof loginSchema>;
@@ -51,8 +51,8 @@ export default function Login() {
   // Show error toast if login fails
   if (loginStatus.isError) {
     toast({
-      title: "Authentication Failed",
-      description: "Invalid username or password. Please try again.",
+      title: "فشل تسجيل الدخول",
+      description: "اسم المستخدم أو كلمة المرور غير صحيحة. حاول مرة أخرى.",
       variant: "destructive",
     });
   }
@@ -68,9 +68,9 @@ export default function Login() {
         
         <Card>
           <CardHeader>
-            <CardTitle className="text-xl">Sign In to Admin Dashboard</CardTitle>
+            <CardTitle className="text-xl">تسجيل الدخول إلى لوحة التحكم</CardTitle>
             <CardDescription>
-              Enter your credentials to access the admin area
+              أدخل بيانات الاعتماد للوصول إلى منطقة الإدارة
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -81,15 +81,15 @@ export default function Login() {
                   name="username"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Username</FormLabel>
+                      <FormLabel>اسم المستخدم</FormLabel>
                       <FormControl>
                         <div className="relative">
-                          <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">
+                          <span className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500">
                             <User className="h-5 w-5" />
                           </span>
                           <Input 
-                            placeholder="Enter your username" 
-                            className="pl-10" 
+                            placeholder="أدخل اسم المستخدم" 
+                            className="pr-10" 
                             {...field} 
                           />
                         </div>
@@ -104,16 +104,16 @@ export default function Login() {
                   name="password"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Password</FormLabel>
+                      <FormLabel>كلمة المرور</FormLabel>
                       <FormControl>
                         <div className="relative">
-                          <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">
+                          <span className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500">
                             <LockKeyhole className="h-5 w-5" />
                           </span>
                           <Input 
                             type="password" 
-                            placeholder="Enter your password" 
-                            className="pl-10" 
+                            placeholder="أدخل كلمة المرور" 
+                            className="pr-10" 
                             {...field} 
                           />
                         </div>
@@ -128,21 +128,21 @@ export default function Login() {
                   className="w-full"
                   disabled={loginStatus.isLoading}
                 >
-                  {loginStatus.isLoading ? 'Signing in...' : 'Sign In'}
+                  {loginStatus.isLoading ? 'جارٍ تسجيل الدخول...' : 'تسجيل الدخول'}
                 </Button>
               </form>
             </Form>
           </CardContent>
           <CardFooter className="flex flex-col">
             <p className="text-center text-sm text-gray-600 mt-2">
-              Demo credentials: username <span className="font-semibold">admin</span> / password <span className="font-semibold">admin123</span>
+              بيانات العرض التوضيحي: اسم المستخدم <span className="font-semibold">admin</span> / كلمة المرور <span className="font-semibold">admin123</span>
             </p>
           </CardFooter>
         </Card>
         
         <div className="mt-6 text-center">
           <a href="/" className="text-sm text-primary hover:text-primary-700">
-            Back to Home
+            العودة إلى الصفحة الرئيسية
           </a>
         </div>
       </div>

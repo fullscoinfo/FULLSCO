@@ -67,7 +67,7 @@ const Sidebar = ({ isMobileOpen, onClose }: SidebarProps) => {
           sidebarRef.current.classList.remove('sidebar-visible');
           sidebarRef.current.classList.add('sidebar-hidden');
           
-          // تطبيق نمط إخفاء فوري
+          // تطبيق نمط إخفاء فوري للموقع العربي (RTL)
           sidebarRef.current.style.transform = 'translateX(100%)';
           document.body.style.overflow = ''; // إعادة تمكين التمرير
         }
@@ -132,7 +132,7 @@ const Sidebar = ({ isMobileOpen, onClose }: SidebarProps) => {
             <span className="text-xl font-bold text-sidebar-foreground">
               FULL<span className="text-sidebar-accent">SCO</span>
             </span>
-            <span className="text-xs text-sidebar-foreground/60 mr-1">Admin</span>
+            <span className="text-xs text-sidebar-foreground/60 mr-1">المدير</span>
           </Link>
         </div>
         
