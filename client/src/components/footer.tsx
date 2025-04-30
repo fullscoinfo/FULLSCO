@@ -1,33 +1,56 @@
 import { Link } from "wouter";
-import { Facebook, Twitter, Instagram, Linkedin, Mail, Phone, MapPin } from "lucide-react";
+import { Facebook, Twitter, Instagram, Linkedin, Mail, Phone, MapPin, Youtube } from "lucide-react";
+import { useSiteSettings } from "@/hooks/use-site-settings";
 
 const Footer = () => {
+  const { settings } = useSiteSettings();
   return (
     <footer className="bg-gray-900 text-white pt-12 pb-6">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4 mb-8">
           <div>
             <Link href="/" className="flex items-center mb-4">
-              <span className="text-2xl font-bold">
-                FULL<span className="text-accent">SCO</span>
-              </span>
+              {settings?.logo ? (
+                <img 
+                  src={settings.logo} 
+                  alt={settings?.siteName || 'FULLSCO'}
+                  className="h-8 md:h-10" 
+                />
+              ) : (
+                <span className="text-2xl font-bold">
+                  {settings?.siteName || 'FULL'}<span className="text-accent">SCO</span>
+                </span>
+              )}
             </Link>
             <p className="text-gray-400 mb-4">
-              دليلك الشامل لفرص المنح الدراسية في جميع أنحاء العالم. نساعد الطلاب في العثور على المنح الدراسية والتقديم عليها لتحقيق أحلامهم الأكاديمية.
+              {settings?.siteDescription || 'دليلك الشامل لفرص المنح الدراسية في جميع أنحاء العالم. نساعد الطلاب في العثور على المنح الدراسية والتقديم عليها لتحقيق أحلامهم الأكاديمية.'}
             </p>
             <div className="flex space-x-4 rtl:space-x-reverse">
-              <a href="#" className="text-gray-400 hover:text-primary">
-                <Facebook className="h-5 w-5" />
-              </a>
-              <a href="#" className="text-gray-400 hover:text-primary">
-                <Twitter className="h-5 w-5" />
-              </a>
-              <a href="#" className="text-gray-400 hover:text-primary">
-                <Instagram className="h-5 w-5" />
-              </a>
-              <a href="#" className="text-gray-400 hover:text-primary">
-                <Linkedin className="h-5 w-5" />
-              </a>
+              {settings?.facebook && (
+                <a href={settings.facebook} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-primary">
+                  <Facebook className="h-5 w-5" />
+                </a>
+              )}
+              {settings?.twitter && (
+                <a href={settings.twitter} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-primary">
+                  <Twitter className="h-5 w-5" />
+                </a>
+              )}
+              {settings?.instagram && (
+                <a href={settings.instagram} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-primary">
+                  <Instagram className="h-5 w-5" />
+                </a>
+              )}
+              {settings?.linkedin && (
+                <a href={settings.linkedin} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-primary">
+                  <Linkedin className="h-5 w-5" />
+                </a>
+              )}
+              {settings?.youtube && (
+                <a href={settings.youtube} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-primary">
+                  <Youtube className="h-5 w-5" />
+                </a>
+              )}
             </div>
           </div>
           
@@ -106,18 +129,24 @@ const Footer = () => {
           <div>
             <h3 className="text-lg font-semibold mb-4">اتصل بنا</h3>
             <ul className="space-y-2">
-              <li className="flex items-start">
-                <Mail className="ml-2 mt-1 h-4 w-4 text-primary" />
-                <span className="text-gray-400">info@fullsco.com</span>
-              </li>
-              <li className="flex items-start">
-                <Phone className="ml-2 mt-1 h-4 w-4 text-primary" />
-                <span className="text-gray-400">+1 (555) 123-4567</span>
-              </li>
-              <li className="flex items-start">
-                <MapPin className="ml-2 mt-1 h-4 w-4 text-primary" />
-                <span className="text-gray-400">123 طريق التعليم، المدينة الأكاديمية</span>
-              </li>
+              {settings?.email && (
+                <li className="flex items-start">
+                  <Mail className="ml-2 mt-1 h-4 w-4 text-primary" />
+                  <span className="text-gray-400">{settings.email}</span>
+                </li>
+              )}
+              {settings?.phone && (
+                <li className="flex items-start">
+                  <Phone className="ml-2 mt-1 h-4 w-4 text-primary" />
+                  <span className="text-gray-400">{settings.phone}</span>
+                </li>
+              )}
+              {settings?.address && (
+                <li className="flex items-start">
+                  <MapPin className="ml-2 mt-1 h-4 w-4 text-primary" />
+                  <span className="text-gray-400">{settings.address}</span>
+                </li>
+              )}
             </ul>
           </div>
         </div>
@@ -125,7 +154,7 @@ const Footer = () => {
         <div className="border-t border-gray-800 pt-6">
           <div className="flex flex-col md:flex-row md:justify-between items-center">
             <p className="text-sm text-gray-400">
-              &copy; {new Date().getFullYear()} FULLSCO. جميع الحقوق محفوظة.
+              {settings?.footerText || `&copy; ${new Date().getFullYear()} ${settings?.siteName || 'FULLSCO'}. جميع الحقوق محفوظة.`}
             </p>
             <div className="flex space-x-4 rtl:space-x-reverse mt-4 md:mt-0">
               <Link href="/privacy">

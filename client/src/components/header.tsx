@@ -45,9 +45,22 @@ const Header = () => {
         <div className="flex h-16 items-center justify-between md:h-20">
           <div className="flex items-center">
             <Link href="/" className="flex items-center">
-              <span className="text-2xl font-bold tracking-tight text-primary md:text-3xl">
-                FULL<span className="text-accent">SCO</span>
-              </span>
+              {settings?.logo ? (
+                <img 
+                  src={settings.logo} 
+                  alt={settings?.siteName || 'FULLSCO'} 
+                  className="h-8 md:h-10" 
+                />
+              ) : (
+                <span className="text-2xl font-bold tracking-tight text-primary md:text-3xl">
+                  {settings?.siteName || 'FULL'}<span className="text-accent">SCO</span>
+                </span>
+              )}
+              {settings?.siteTagline && (
+                <span className="ml-2 text-xs text-muted-foreground hidden sm:block">
+                  {settings.siteTagline}
+                </span>
+              )}
             </Link>
             
             {/* Desktop Navigation */}
