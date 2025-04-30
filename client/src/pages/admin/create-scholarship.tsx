@@ -150,27 +150,32 @@ const CreateScholarship = () => {
   }
 
   return (
-    <div className="flex h-screen overflow-hidden bg-gray-100">
-      <Sidebar />
-
-      <div className="flex-1 overflow-y-auto">
-        <main className="p-6">
+    <div className="bg-background min-h-screen relative overflow-x-hidden">
+      {/* السايدبار للجوال */}
+      <Sidebar 
+        isMobileOpen={false} 
+        onClose={() => {}} 
+      />
+      
+      {/* المحتوى الرئيسي */}
+      <div className="w-full md:mr-64 transition-all duration-300">
+        <main className="p-4 md:p-6">
           <div className="mb-6">
             <Button
               variant="outline"
               className="mb-4"
               onClick={() => navigate("/admin/scholarships")}
             >
-              <ArrowLeft className="mr-2 h-4 w-4" /> Back to Scholarships
+              <ArrowLeft className="ml-2 h-4 w-4" /> العودة إلى المنح الدراسية
             </Button>
-            <h1 className="text-2xl font-bold text-gray-900">
-              Create New Scholarship
+            <h1 className="text-xl md:text-2xl font-bold">
+              إضافة منحة دراسية جديدة
             </h1>
           </div>
 
-          <Card>
+          <Card className="shadow-soft">
             <CardHeader>
-              <CardTitle>Scholarship Information</CardTitle>
+              <CardTitle>معلومات المنحة الدراسية</CardTitle>
             </CardHeader>
             <CardContent>
               <Form {...form}>
@@ -183,12 +188,12 @@ const CreateScholarship = () => {
                     name="title"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Title</FormLabel>
+                        <FormLabel>عنوان المنحة</FormLabel>
                         <FormControl>
-                          <Input placeholder="Scholarship title" {...field} />
+                          <Input placeholder="أدخل عنوان المنحة الدراسية" {...field} />
                         </FormControl>
                         <FormDescription>
-                          Enter a descriptive title for the scholarship.
+                          أدخل عنوانًا وصفيًا للمنحة الدراسية.
                         </FormDescription>
                         <FormMessage />
                       </FormItem>
@@ -201,14 +206,14 @@ const CreateScholarship = () => {
                       name="countryId"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Country</FormLabel>
+                          <FormLabel>الدولة</FormLabel>
                           <Select
                             onValueChange={field.onChange}
                             defaultValue={field.value?.toString()}
                           >
                             <FormControl>
                               <SelectTrigger>
-                                <SelectValue placeholder="Select country" />
+                                <SelectValue placeholder="اختر الدولة" />
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
@@ -232,14 +237,14 @@ const CreateScholarship = () => {
                       name="levelId"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Degree Level</FormLabel>
+                          <FormLabel>المستوى الدراسي</FormLabel>
                           <Select
                             onValueChange={field.onChange}
                             defaultValue={field.value?.toString()}
                           >
                             <FormControl>
                               <SelectTrigger>
-                                <SelectValue placeholder="Select level" />
+                                <SelectValue placeholder="اختر المستوى" />
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
@@ -263,14 +268,14 @@ const CreateScholarship = () => {
                       name="categoryId"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Category</FormLabel>
+                          <FormLabel>التصنيف</FormLabel>
                           <Select
                             onValueChange={field.onChange}
                             defaultValue={field.value?.toString()}
                           >
                             <FormControl>
                               <SelectTrigger>
-                                <SelectValue placeholder="Select category" />
+                                <SelectValue placeholder="اختر التصنيف" />
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
@@ -295,10 +300,10 @@ const CreateScholarship = () => {
                     name="description"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Description</FormLabel>
+                        <FormLabel>الوصف</FormLabel>
                         <FormControl>
                           <Textarea
-                            placeholder="Detailed description of the scholarship"
+                            placeholder="وصف تفصيلي للمنحة الدراسية"
                             className="min-h-32"
                             {...field}
                           />
@@ -314,12 +319,12 @@ const CreateScholarship = () => {
                       name="deadline"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Application Deadline</FormLabel>
+                          <FormLabel>الموعد النهائي للتقديم</FormLabel>
                           <FormControl>
-                            <Input placeholder="e.g., June 30, 2023" {...field} />
+                            <Input placeholder="مثال: 30 يونيو، 2025" {...field} />
                           </FormControl>
                           <FormDescription>
-                            Enter the deadline for applications.
+                            أدخل الموعد النهائي لتقديم الطلبات.
                           </FormDescription>
                           <FormMessage />
                         </FormItem>
@@ -331,9 +336,9 @@ const CreateScholarship = () => {
                       name="amount"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Scholarship Amount</FormLabel>
+                          <FormLabel>قيمة المنحة</FormLabel>
                           <FormControl>
-                            <Input placeholder="e.g., $10,000/year" {...field} />
+                            <Input placeholder="مثال: 10,000 دولار/سنة" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -346,17 +351,17 @@ const CreateScholarship = () => {
                       control={form.control}
                       name="isFeatured"
                       render={({ field }) => (
-                        <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                        <FormItem className="flex flex-row items-start space-x-3 space-x-reverse space-y-0 rounded-md border border-border p-4">
                           <FormControl>
                             <Checkbox
                               checked={field.value}
                               onCheckedChange={field.onChange}
                             />
                           </FormControl>
-                          <div className="space-y-1 leading-none">
-                            <FormLabel>Featured Scholarship</FormLabel>
+                          <div className="space-y-1 leading-none mr-3">
+                            <FormLabel>منحة مميزة</FormLabel>
                             <FormDescription>
-                              Featured scholarships appear prominently on the home page.
+                              المنح المميزة تظهر بشكل بارز في الصفحة الرئيسية.
                             </FormDescription>
                           </div>
                         </FormItem>
@@ -367,17 +372,17 @@ const CreateScholarship = () => {
                       control={form.control}
                       name="isFullyFunded"
                       render={({ field }) => (
-                        <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                        <FormItem className="flex flex-row items-start space-x-3 space-x-reverse space-y-0 rounded-md border border-border p-4">
                           <FormControl>
                             <Checkbox
                               checked={field.value}
                               onCheckedChange={field.onChange}
                             />
                           </FormControl>
-                          <div className="space-y-1 leading-none">
-                            <FormLabel>Fully Funded</FormLabel>
+                          <div className="space-y-1 leading-none mr-3">
+                            <FormLabel>منحة ممولة بالكامل</FormLabel>
                             <FormDescription>
-                              Mark this scholarship as fully funded.
+                              ضع علامة على هذه المنحة إذا كانت ممولة بالكامل.
                             </FormDescription>
                           </div>
                         </FormItem>
@@ -390,10 +395,10 @@ const CreateScholarship = () => {
                     name="requirements"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Requirements</FormLabel>
+                        <FormLabel>متطلبات المنحة</FormLabel>
                         <FormControl>
                           <Textarea
-                            placeholder="Eligibility requirements and application criteria"
+                            placeholder="شروط الأهلية ومعايير التقديم"
                             className="min-h-24"
                             {...field}
                           />
@@ -408,12 +413,12 @@ const CreateScholarship = () => {
                     name="applicationLink"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Application Link</FormLabel>
+                        <FormLabel>رابط التقديم</FormLabel>
                         <FormControl>
-                          <Input placeholder="https://..." {...field} />
+                          <Input placeholder="https://..." {...field} dir="ltr" />
                         </FormControl>
                         <FormDescription>
-                          URL where students can apply for this scholarship.
+                          عنوان URL حيث يمكن للطلاب التقديم على هذه المنحة.
                         </FormDescription>
                         <FormMessage />
                       </FormItem>
@@ -449,7 +454,7 @@ const CreateScholarship = () => {
                       type="submit"
                       disabled={createMutation.isPending}
                     >
-                      {createMutation.isPending ? "Creating..." : "Create Scholarship"}
+                      {createMutation.isPending ? "جاري الإنشاء..." : "إنشاء المنحة"}
                     </Button>
                   </div>
                 </form>
