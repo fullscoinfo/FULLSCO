@@ -16,6 +16,9 @@ import AdminAnalytics from "@/pages/admin/analytics";
 import AdminCategories from "@/pages/admin/categories";
 import AdminLevels from "@/pages/admin/levels";
 import AdminCountries from "@/pages/admin/countries";
+import AdminSiteSettings from "@/pages/admin/site-settings";
+import AdminPages from "@/pages/admin/pages";
+import AdminMenus from "@/pages/admin/menus";
 import CreateScholarship from "@/pages/admin/create-scholarship";
 import CreatePost from "@/pages/admin/create-post";
 import AdminLogin from "@/pages/admin/login";
@@ -58,6 +61,9 @@ function App() {
         <Route path="/admin/posts" component={AdminPosts} />
         <Route path="/admin/users" component={AdminUsers} />
         <Route path="/admin/settings" component={AdminSettings} />
+        <Route path="/admin/site-settings" component={AdminSiteSettings} />
+        <Route path="/admin/pages" component={AdminPages} />
+        <Route path="/admin/menus" component={AdminMenus} />
         <Route path="/admin/seo" component={AdminSEO} />
         <Route path="/admin/analytics" component={AdminAnalytics} />
         <Route path="/admin/scholarships/create" component={CreateScholarship} />

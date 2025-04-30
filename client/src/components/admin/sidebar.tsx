@@ -16,7 +16,10 @@ import {
   FolderTree,
   School,
   Globe,
-  MapPin
+  MapPin,
+  Palette,
+  FileEdit,
+  ListTree
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -30,13 +33,22 @@ type NavItem = {
 
 const navItems: NavItem[] = [
   { href: '/admin', label: 'لوحة التحكم', icon: LayoutDashboard },
+  
+  // منح وتصنيفات
   { href: '/admin/scholarships', label: 'المنح الدراسية', icon: GraduationCap },
   { href: '/admin/categories', label: 'التصنيفات', icon: FolderTree },
   { href: '/admin/levels', label: 'المستويات الدراسية', icon: School },
   { href: '/admin/countries', label: 'الدول', icon: Globe },
+  
+  // المحتوى
   { href: '/admin/posts', label: 'المقالات', icon: FileText },
+  { href: '/admin/pages', label: 'الصفحات الثابتة', icon: FileEdit },
+  { href: '/admin/menus', label: 'القوائم والروابط', icon: ListTree },
+  
+  // إعدادات وتحليلات
   { href: '/admin/users', label: 'المستخدمين', icon: Users },
-  { href: '/admin/settings', label: 'الإعدادات', icon: Settings },
+  { href: '/admin/site-settings', label: 'إعدادات الموقع', icon: Palette },
+  { href: '/admin/settings', label: 'الإعدادات العامة', icon: Settings },
   { href: '/admin/seo', label: 'تحسين محركات البحث', icon: Search },
   { href: '/admin/analytics', label: 'التحليلات', icon: BarChart },
 ];
