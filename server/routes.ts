@@ -12,7 +12,9 @@ import {
   insertSuccessStorySchema,
   insertSubscriberSchema,
   insertSeoSettingsSchema,
-  insertSiteSettingsSchema
+  insertSiteSettingsSchema,
+  insertPageSchema,
+  User
 } from "@shared/schema";
 import session from "express-session";
 import passport from "passport";
@@ -748,6 +750,143 @@ export async function registerRoutes(app: Express): Promise<Server> {
           scholarships: topScholarships
         }
       });
+    } catch (error) {
+      res.status(500).json({ message: (error as Error).message });
+    }
+  });
+
+  // Static Pages Routes
+  // إنشاء صفحة ثابتة جديدة (مدير فقط)
+  app.post("/api/pages", isAdmin, async (req, res) => {
+    try {
+      const data = insertPageSchema.parse(req.body);
+      const page = await storage.createPage(data);
+      res.status(201).json(page);
+    } catch (error) {
+      res.status(400).json({ message: (error as Error).message });
+    }
+  });
+
+  // الحصول على جميع الصفحات الثابتة للإدارة (مدير فقط)
+  app.get("/api/admin/pages", isAdmin, async (req, res) => {
+    try {
+      const pages = await storage.listPages();
+      res.json(pages);
+    } catch (error) {
+      res.status(500).json({ message: (error as Error).message });
+    }
+  });
+
+  // الحصول على جميع الصفحات الثابتة المنشورة للعرض في الواجهة الأمامية
+  app.get("/api/pages", async (req, res) => {
+    try {
+      // تصفية حسب المكان: الرأس أو التذييل أو كل الصفحات المنشورة
+      const showInHeader = req.query.header === "true";
+      const showInFooter = req.query.footer === "true";
+      
+      const filters: {
+        isPublished: boolean;
+        showInHeader?: boolean;
+        showInFooter?: boolean;
+      } = {
+        isPublished: true
+      };
+      
+      if (req.query.header !== undefined) {
+        filters.showInHeader = showInHeader;
+      }
+      
+      if (req.query.footer !== undefined) {
+        filters.showInFooter = showInFooter;
+      }
+      
+      const pages = await storage.listPages(filters);
+      res.json(pages);
+    } catch (error) {
+      res.status(500).json({ message: (error as Error).message });
+    }
+  });
+
+  // الحصول على صفحة ثابتة محددة بواسطة المعرف (مدير فقط للصفحات غير المنشورة)
+  app.get("/api/pages/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "معرف الصفحة غير صالح" });
+      }
+      
+      const page = await storage.getPage(id);
+      if (!page) {
+        return res.status(404).json({ message: "الصفحة غير موجودة" });
+      }
+      
+      // إذا كانت الصفحة غير منشورة، يجب أن يكون المستخدم مديرًا
+      if (!page.isPublished && (!req.isAuthenticated() || (req.user as User).role !== "admin")) {
+        return res.status(403).json({ message: "غير مصرح بالوصول" });
+      }
+      
+      res.json(page);
+    } catch (error) {
+      res.status(500).json({ message: (error as Error).message });
+    }
+  });
+
+  // الحصول على صفحة ثابتة محددة بواسطة الرابط المختصر
+  app.get("/api/pages/slug/:slug", async (req, res) => {
+    try {
+      const slug = req.params.slug;
+      const page = await storage.getPageBySlug(slug);
+      
+      if (!page) {
+        return res.status(404).json({ message: "الصفحة غير موجودة" });
+      }
+      
+      // إذا كانت الصفحة غير منشورة، يجب أن يكون المستخدم مديرًا
+      if (!page.isPublished && (!req.isAuthenticated() || (req.user as User).role !== "admin")) {
+        return res.status(403).json({ message: "غير مصرح بالوصول" });
+      }
+      
+      res.json(page);
+    } catch (error) {
+      res.status(500).json({ message: (error as Error).message });
+    }
+  });
+
+  // تحديث صفحة ثابتة (مدير فقط)
+  app.put("/api/pages/:id", isAdmin, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "معرف الصفحة غير صالح" });
+      }
+      
+      const data = insertPageSchema.partial().parse(req.body);
+      const page = await storage.updatePage(id, data);
+      
+      if (!page) {
+        return res.status(404).json({ message: "الصفحة غير موجودة" });
+      }
+      
+      res.json(page);
+    } catch (error) {
+      res.status(400).json({ message: (error as Error).message });
+    }
+  });
+
+  // حذف صفحة ثابتة (مدير فقط)
+  app.delete("/api/pages/:id", isAdmin, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "معرف الصفحة غير صالح" });
+      }
+      
+      const success = await storage.deletePage(id);
+      if (!success) {
+        return res.status(404).json({ message: "الصفحة غير موجودة" });
+      }
+      
+      res.status(204).end();
     } catch (error) {
       res.status(500).json({ message: (error as Error).message });
     }
