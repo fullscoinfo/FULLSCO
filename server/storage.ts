@@ -10,7 +10,8 @@ import {
   successStories, SuccessStory, InsertSuccessStory,
   subscribers, Subscriber, InsertSubscriber,
   seoSettings, SeoSetting, InsertSeoSetting,
-  siteSettings, SiteSetting, InsertSiteSetting
+  siteSettings, SiteSetting, InsertSiteSetting,
+  pages, Page, InsertPage
 } from "@shared/schema";
 
 // Storage interface
@@ -125,6 +126,7 @@ export class MemStorage implements IStorage {
   private subscribers: Map<number, Subscriber>;
   private seoSettings: Map<number, SeoSetting>;
   private siteSettings: SiteSetting | undefined;
+  private pages: Map<number, Page>;
   private currentIds: {
     users: number;
     categories: number;
@@ -138,6 +140,7 @@ export class MemStorage implements IStorage {
     subscribers: number;
     seoSettings: number;
     siteSettings: number;
+    pages: number;
   };
 
   constructor() {
@@ -153,6 +156,7 @@ export class MemStorage implements IStorage {
     this.successStories = new Map();
     this.subscribers = new Map();
     this.seoSettings = new Map();
+    this.pages = new Map();
 
     // Initialize IDs
     this.currentIds = {
@@ -167,7 +171,8 @@ export class MemStorage implements IStorage {
       successStories: 1,
       subscribers: 1,
       seoSettings: 1,
-      siteSettings: 1
+      siteSettings: 1,
+      pages: 1
     };
 
     // Seed initial data
@@ -374,6 +379,54 @@ export class MemStorage implements IStorage {
       enableScholarshipSearch: true,
       footerText: "© 2023 FULLSCO. All rights reserved."
     });
+    
+    // Seed static pages
+    const pages = [
+      {
+        title: "من نحن",
+        slug: "about",
+        content: "<h1>من نحن</h1><p>مرحبًا بك في منصة FULLSCO، المنصة الرائدة للمنح الدراسية حول العالم.</p><p>نسعى لتوفير أفضل الفرص التعليمية للطلاب من جميع أنحاء العالم.</p>",
+        metaTitle: "من نحن | FULLSCO",
+        metaDescription: "تعرف على منصة FULLSCO للمنح الدراسية وفريق العمل والرؤية والأهداف",
+        isPublished: true,
+        showInFooter: true,
+        showInHeader: true
+      },
+      {
+        title: "تواصل معنا",
+        slug: "contact",
+        content: "<h1>تواصل معنا</h1><p>يمكنك التواصل معنا عبر البريد الإلكتروني أو الهاتف أو وسائل التواصل الاجتماعي.</p>",
+        metaTitle: "تواصل معنا | FULLSCO",
+        metaDescription: "تواصل مع فريق FULLSCO للاستفسارات والدعم",
+        isPublished: true,
+        showInFooter: true,
+        showInHeader: true
+      },
+      {
+        title: "سياسة الخصوصية",
+        slug: "privacy-policy",
+        content: "<h1>سياسة الخصوصية</h1><p>تلتزم FULLSCO بحماية بياناتك الشخصية. تعرف على كيفية جمع واستخدام البيانات على منصتنا.</p>",
+        metaTitle: "سياسة الخصوصية | FULLSCO",
+        metaDescription: "سياسة الخصوصية وحماية البيانات الشخصية على منصة FULLSCO",
+        isPublished: true,
+        showInFooter: true,
+        showInHeader: false
+      },
+      {
+        title: "الأسئلة الشائعة",
+        slug: "faq",
+        content: "<h1>الأسئلة الشائعة</h1><p>تجد هنا إجابات على الأسئلة الشائعة حول منصة FULLSCO والمنح الدراسية.</p>",
+        metaTitle: "الأسئلة الشائعة | FULLSCO",
+        metaDescription: "إجابات على الأسئلة الشائعة حول المنح الدراسية ومنصة FULLSCO",
+        isPublished: true,
+        showInFooter: true,
+        showInHeader: false
+      }
+    ];
+    
+    for (const page of pages) {
+      this.createPage(page);
+    }
   }
 
   // User methods
@@ -1010,6 +1063,68 @@ export class MemStorage implements IStorage {
     }
     
     return [];
+  }
+
+  // Page methods
+  async getPage(id: number): Promise<Page | undefined> {
+    return this.pages.get(id);
+  }
+
+  async getPageBySlug(slug: string): Promise<Page | undefined> {
+    return Array.from(this.pages.values()).find(
+      (page) => page.slug === slug
+    );
+  }
+
+  async createPage(insertPage: InsertPage): Promise<Page> {
+    const id = this.currentIds.pages++;
+    const now = new Date();
+    const page: Page = { 
+      ...insertPage, 
+      id, 
+      createdAt: now,
+      updatedAt: now
+    };
+    this.pages.set(id, page);
+    return page;
+  }
+
+  async updatePage(id: number, updatePage: Partial<InsertPage>): Promise<Page | undefined> {
+    const page = this.pages.get(id);
+    if (!page) return undefined;
+
+    const now = new Date();
+    const updatedPage = { 
+      ...page, 
+      ...updatePage,
+      updatedAt: now 
+    };
+    this.pages.set(id, updatedPage);
+    return updatedPage;
+  }
+
+  async deletePage(id: number): Promise<boolean> {
+    return this.pages.delete(id);
+  }
+
+  async listPages(filters?: { isPublished?: boolean, showInHeader?: boolean, showInFooter?: boolean }): Promise<Page[]> {
+    let pages = Array.from(this.pages.values());
+    
+    if (filters) {
+      if (filters.isPublished !== undefined) {
+        pages = pages.filter(page => page.isPublished === filters.isPublished);
+      }
+      
+      if (filters.showInHeader !== undefined) {
+        pages = pages.filter(page => page.showInHeader === filters.showInHeader);
+      }
+      
+      if (filters.showInFooter !== undefined) {
+        pages = pages.filter(page => page.showInFooter === filters.showInFooter);
+      }
+    }
+    
+    return pages;
   }
 }
 
