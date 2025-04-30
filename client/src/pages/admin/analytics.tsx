@@ -28,6 +28,10 @@ import { useLocation } from 'wouter';
 // ألوان للرسوم البيانية
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8'];
 
+interface AnalyticsUser {
+  role?: string;
+}
+
 export default function AdminAnalytics() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const isMobile = useIsMobile();
@@ -56,14 +60,14 @@ export default function AdminAnalytics() {
       }
       return response.json();
     },
-    enabled: !!user && user.role === 'admin',
+    enabled: !!user && (user as AnalyticsUser)?.role === 'admin',
     staleTime: 1000 * 60 * 5, // 5 دقائق
     refetchOnWindowFocus: false,
   });
 
   useEffect(() => {
     // إعادة جلب البيانات عند تغيير الفترة الزمنية
-    if (user && user.role === 'admin') {
+    if (user && (user as AnalyticsUser)?.role === 'admin') {
       refetch();
     }
   }, [timeRange, user, refetch]);
@@ -77,7 +81,7 @@ export default function AdminAnalytics() {
         variant: "destructive",
       });
       navigate('/admin/login');
-    } else if (user && user.role !== 'admin') {
+    } else if (user && (user as AnalyticsUser)?.role !== 'admin') {
       toast({
         title: "وصول مرفوض",
         description: "يجب أن تكون مسؤولاً للوصول إلى هذه الصفحة",
@@ -205,7 +209,7 @@ export default function AdminAnalytics() {
               
               {/* Charts */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-                {/* الزيارات الشهرية */}
+                {/* الزيارات حسب الفترة */}
                 <Card>
                   <CardHeader>
                     <CardTitle>إحصائيات الزيارات</CardTitle>
@@ -252,7 +256,7 @@ export default function AdminAnalytics() {
                             cx="50%"
                             cy="50%"
                             labelLine={false}
-                            label={({name, percent}) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                            label={({name, percent}: {name: string, percent: number}) => `${name}: ${(percent * 100).toFixed(0)}%`}
                             outerRadius={80}
                             fill="#8884d8"
                             dataKey="value"
