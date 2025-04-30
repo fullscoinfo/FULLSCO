@@ -14,6 +14,8 @@ import AdminSettings from "@/pages/admin/settings";
 import AdminSEO from "@/pages/admin/seo";
 import AdminAnalytics from "@/pages/admin/analytics";
 import AdminCategories from "@/pages/admin/categories";
+import AdminLevels from "@/pages/admin/levels";
+import AdminCountries from "@/pages/admin/countries";
 import CreateScholarship from "@/pages/admin/create-scholarship";
 import CreatePost from "@/pages/admin/create-post";
 import AdminLogin from "@/pages/admin/login";
@@ -51,6 +53,8 @@ function App() {
         <Route path="/admin" component={AdminDashboard} />
         <Route path="/admin/scholarships" component={AdminScholarships} />
         <Route path="/admin/categories" component={AdminCategories} />
+        <Route path="/admin/levels" component={AdminLevels} />
+        <Route path="/admin/countries" component={AdminCountries} />
         <Route path="/admin/posts" component={AdminPosts} />
         <Route path="/admin/users" component={AdminUsers} />
         <Route path="/admin/settings" component={AdminSettings} />
