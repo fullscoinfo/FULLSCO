@@ -167,6 +167,39 @@ export const insertSeoSettingsSchema = createInsertSchema(seoSettings).omit({
   id: true
 });
 
+// Site Settings Table
+export const siteSettings = pgTable("site_settings", {
+  id: serial("id").primaryKey(),
+  siteName: text("site_name").notNull(),
+  siteTagline: text("site_tagline"),
+  siteDescription: text("site_description"),
+  favicon: text("favicon"),
+  logo: text("logo"),
+  logoDark: text("logo_dark"),
+  email: text("email"),
+  phone: text("phone"),
+  whatsapp: text("whatsapp"),
+  address: text("address"),
+  facebook: text("facebook"),
+  twitter: text("twitter"),
+  instagram: text("instagram"),
+  youtube: text("youtube"),
+  linkedin: text("linkedin"),
+  primaryColor: text("primary_color"),
+  secondaryColor: text("secondary_color"),
+  accentColor: text("accent_color"),
+  enableDarkMode: boolean("enable_dark_mode").default(true),
+  rtlDirection: boolean("rtl_direction").default(true),
+  defaultLanguage: text("default_language").default("ar"),
+  enableNewsletter: boolean("enable_newsletter").default(true),
+  enableScholarshipSearch: boolean("enable_scholarship_search").default(true),
+  footerText: text("footer_text")
+});
+
+export const insertSiteSettingsSchema = createInsertSchema(siteSettings).omit({
+  id: true
+});
+
 // Export Types
 export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
@@ -200,3 +233,6 @@ export type InsertSubscriber = z.infer<typeof insertSubscriberSchema>;
 
 export type SeoSetting = typeof seoSettings.$inferSelect;
 export type InsertSeoSetting = z.infer<typeof insertSeoSettingsSchema>;
+
+export type SiteSetting = typeof siteSettings.$inferSelect;
+export type InsertSiteSetting = z.infer<typeof insertSiteSettingsSchema>;
