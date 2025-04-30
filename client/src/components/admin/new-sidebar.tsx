@@ -284,7 +284,7 @@ const Sidebar = ({ isMobileOpen, onClose }: SidebarProps) => {
                                 "w-full justify-start px-3 py-2 h-auto text-sm rounded-md",
                               )}
                             >
-                              <subItem.icon className="ml-2 h-4 w-4" />
+                              <subItem.icon className="mr-2 h-4 w-4" />
                               {subItem.label}
                             </Button>
                           </Link>
@@ -307,7 +307,7 @@ const Sidebar = ({ isMobileOpen, onClose }: SidebarProps) => {
             className="w-full justify-start"
             onClick={handleLogout}
           >
-            <LogOut className="ml-2 h-4 w-4" />
+            <LogOut className="mr-2 h-4 w-4" />
             تسجيل الخروج
           </Button>
         </div>
