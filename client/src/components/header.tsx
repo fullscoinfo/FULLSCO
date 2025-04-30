@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
-import { Search, ChevronDown, Menu, GraduationCap, BookOpen, MapPin, Globe, Award, User } from "lucide-react";
+import { Search, ChevronDown, Menu, GraduationCap, BookOpen, MapPin, Globe, Award, User, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -13,6 +13,7 @@ import { Input } from "@/components/ui/input";
 import { useAuth } from "@/hooks/use-auth";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useSiteSettings } from "@/hooks/use-site-settings";
+import { usePages } from "@/hooks/use-pages";
 
 const Header = () => {
   const [location] = useLocation();
@@ -21,6 +22,7 @@ const Header = () => {
   const { user } = useAuth();
   const isMobile = useIsMobile();
   const { settings, isLoading: settingsLoading } = useSiteSettings();
+  const { data: headerPages, isLoading: pagesLoading } = usePages({ showInHeader: true });
 
   useEffect(() => {
     const handleScroll = () => {
@@ -32,6 +34,7 @@ const Header = () => {
   }, []);
 
   const isActive = (path: string) => location === path;
+  const isPageActive = (slug: string) => location === `/page/${slug}`;
 
   return (
     <header 
@@ -136,17 +139,31 @@ const Header = () => {
                 </span>
               </Link>
               
-              <Link href="/about">
-                <span className={`link-hover flex items-center px-3 py-2 text-sm font-medium transition-colors ${isActive('/about') ? 'text-primary' : 'text-foreground/80 hover:text-primary'}`}>
-                  عن الموقع
-                </span>
-              </Link>
+              {/* عرض الصفحات الثابتة في الرأس */}
+              {headerPages?.map(page => (
+                <Link key={page.id} href={`/page/${page.slug}`}>
+                  <span className={`link-hover flex items-center px-3 py-2 text-sm font-medium transition-colors ${isPageActive(page.slug) ? 'text-primary' : 'text-foreground/80 hover:text-primary'}`}>
+                    {page.title}
+                  </span>
+                </Link>
+              ))}
               
-              <Link href="/contact">
-                <span className={`link-hover flex items-center px-3 py-2 text-sm font-medium transition-colors ${isActive('/contact') ? 'text-primary' : 'text-foreground/80 hover:text-primary'}`}>
-                  اتصل بنا
-                </span>
-              </Link>
+              {/* الصفحات الافتراضية إذا لم يتم العثور على الصفحات الديناميكية */}
+              {(!headerPages || headerPages.length === 0) && (
+                <>
+                  <Link href="/about">
+                    <span className={`link-hover flex items-center px-3 py-2 text-sm font-medium transition-colors ${isActive('/about') ? 'text-primary' : 'text-foreground/80 hover:text-primary'}`}>
+                      عن الموقع
+                    </span>
+                  </Link>
+                  
+                  <Link href="/contact">
+                    <span className={`link-hover flex items-center px-3 py-2 text-sm font-medium transition-colors ${isActive('/contact') ? 'text-primary' : 'text-foreground/80 hover:text-primary'}`}>
+                      اتصل بنا
+                    </span>
+                  </Link>
+                </>
+              )}
             </nav>
           </div>
           
@@ -246,16 +263,33 @@ const Header = () => {
                   <span className={isActive('/success-stories') ? 'text-primary font-semibold' : ''}>قصص نجاح</span>
                 </div>
               </Link>
-              <Link href="/about">
-                <div className="flex items-center gap-2 rounded-md px-3 py-2.5 text-base font-medium text-foreground/80 hover:bg-muted hover:text-primary">
-                  <span className={isActive('/about') ? 'text-primary font-semibold' : ''}>عن الموقع</span>
-                </div>
-              </Link>
-              <Link href="/contact">
-                <div className="flex items-center gap-2 rounded-md px-3 py-2.5 text-base font-medium text-foreground/80 hover:bg-muted hover:text-primary">
-                  <span className={isActive('/contact') ? 'text-primary font-semibold' : ''}>اتصل بنا</span>
-                </div>
-              </Link>
+              
+              {/* عرض الصفحات الثابتة في القائمة المتنقلة */}
+              {headerPages?.map(page => (
+                <Link key={page.id} href={`/page/${page.slug}`}>
+                  <div className="flex items-center gap-2 rounded-md px-3 py-2.5 text-base font-medium text-foreground/80 hover:bg-muted hover:text-primary">
+                    <span className={isPageActive(page.slug) ? 'text-primary font-semibold' : ''}>
+                      {page.title}
+                    </span>
+                  </div>
+                </Link>
+              ))}
+              
+              {/* الصفحات الافتراضية إذا لم يتم العثور على الصفحات الديناميكية */}
+              {(!headerPages || headerPages.length === 0) && (
+                <>
+                  <Link href="/about">
+                    <div className="flex items-center gap-2 rounded-md px-3 py-2.5 text-base font-medium text-foreground/80 hover:bg-muted hover:text-primary">
+                      <span className={isActive('/about') ? 'text-primary font-semibold' : ''}>عن الموقع</span>
+                    </div>
+                  </Link>
+                  <Link href="/contact">
+                    <div className="flex items-center gap-2 rounded-md px-3 py-2.5 text-base font-medium text-foreground/80 hover:bg-muted hover:text-primary">
+                      <span className={isActive('/contact') ? 'text-primary font-semibold' : ''}>اتصل بنا</span>
+                    </div>
+                  </Link>
+                </>
+              )}
             </div>
             
             <div className="mt-4 flex items-center justify-between gap-4 border-t border-border pt-4">

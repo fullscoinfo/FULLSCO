@@ -6,6 +6,7 @@ import Scholarships from "@/pages/scholarships";
 import ScholarshipDetail from "@/pages/scholarship-detail";
 import Articles from "@/pages/articles";
 import ArticleDetail from "@/pages/article-detail";
+import StaticPage from "@/pages/static-page";
 
 // Admin Components - Original
 import AdminDashboard from "@/pages/admin/dashboard";
@@ -95,6 +96,7 @@ function App() {
                     <Route path="/scholarships/:slug" component={ScholarshipDetail} />
                     <Route path="/articles" component={Articles} />
                     <Route path="/articles/:slug" component={ArticleDetail} />
+                    <Route path="/page/:slug" component={StaticPage} />
                     
                     {/* Admin Login */}
                     <Route path="/admin/login" component={AdminLogin} />

@@ -1,9 +1,12 @@
 import { Link } from "wouter";
 import { Facebook, Twitter, Instagram, Linkedin, Mail, Phone, MapPin, Youtube } from "lucide-react";
 import { useSiteSettings } from "@/hooks/use-site-settings";
+import { usePages } from "@/hooks/use-pages";
 
 const Footer = () => {
   const { settings } = useSiteSettings();
+  const { data: footerPages, isLoading: pagesLoading } = usePages({ showInFooter: true });
+  
   return (
     <footer className="bg-gray-900 text-white pt-12 pb-6">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -77,16 +80,15 @@ const Footer = () => {
                   <span className="text-gray-400 hover:text-white">قصص النجاح</span>
                 </Link>
               </li>
-              <li>
-                <Link href="/about">
-                  <span className="text-gray-400 hover:text-white">من نحن</span>
-                </Link>
-              </li>
-              <li>
-                <Link href="/contact">
-                  <span className="text-gray-400 hover:text-white">اتصل بنا</span>
-                </Link>
-              </li>
+              
+              {/* عرض الصفحات الثابتة في التذييل */}
+              {footerPages?.map(page => (
+                <li key={page.id}>
+                  <Link href={`/page/${page.slug}`}>
+                    <span className="text-gray-400 hover:text-white">{page.title}</span>
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
           
@@ -157,15 +159,36 @@ const Footer = () => {
               {settings?.footerText || `&copy; ${new Date().getFullYear()} ${settings?.siteName || 'FULLSCO'}. جميع الحقوق محفوظة.`}
             </p>
             <div className="flex space-x-4 rtl:space-x-reverse mt-4 md:mt-0">
-              <Link href="/privacy">
-                <span className="text-sm text-gray-400 hover:text-white">سياسة الخصوصية</span>
-              </Link>
-              <Link href="/terms">
-                <span className="text-sm text-gray-400 hover:text-white">شروط الخدمة</span>
-              </Link>
-              <Link href="/cookies">
-                <span className="text-sm text-gray-400 hover:text-white">سياسة ملفات تعريف الارتباط</span>
-              </Link>
+              {/* عرض روابط الصفحات الشائعة كالخصوصية والشروط إن وجدت، أو استخدم روابط ثابتة إن لم تكن موجودة */}
+              {footerPages?.find(page => page.slug === 'privacy-policy') ? (
+                <Link href={`/page/privacy-policy`}>
+                  <span className="text-sm text-gray-400 hover:text-white">سياسة الخصوصية</span>
+                </Link>
+              ) : (
+                <Link href="/privacy">
+                  <span className="text-sm text-gray-400 hover:text-white">سياسة الخصوصية</span>
+                </Link>
+              )}
+              
+              {footerPages?.find(page => page.slug === 'terms') ? (
+                <Link href={`/page/terms`}>
+                  <span className="text-sm text-gray-400 hover:text-white">شروط الخدمة</span>
+                </Link>
+              ) : (
+                <Link href="/terms">
+                  <span className="text-sm text-gray-400 hover:text-white">شروط الخدمة</span>
+                </Link>
+              )}
+              
+              {footerPages?.find(page => page.slug === 'cookie-policy') ? (
+                <Link href={`/page/cookie-policy`}>
+                  <span className="text-sm text-gray-400 hover:text-white">سياسة ملفات تعريف الارتباط</span>
+                </Link>
+              ) : (
+                <Link href="/cookies">
+                  <span className="text-sm text-gray-400 hover:text-white">سياسة ملفات تعريف الارتباط</span>
+                </Link>
+              )}
             </div>
           </div>
         </div>
