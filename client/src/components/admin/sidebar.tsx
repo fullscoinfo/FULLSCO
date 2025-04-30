@@ -12,7 +12,8 @@ import {
   LogOut,
   Menu,
   X,
-  Home
+  Home,
+  FolderTree
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -27,6 +28,7 @@ type NavItem = {
 const navItems: NavItem[] = [
   { href: '/admin', label: 'لوحة التحكم', icon: LayoutDashboard },
   { href: '/admin/scholarships', label: 'المنح الدراسية', icon: GraduationCap },
+  { href: '/admin/categories', label: 'التصنيفات', icon: FolderTree },
   { href: '/admin/posts', label: 'المقالات', icon: FileText },
   { href: '/admin/users', label: 'المستخدمين', icon: Users },
   { href: '/admin/settings', label: 'الإعدادات', icon: Settings },
@@ -49,18 +51,18 @@ const Sidebar = ({ isMobileOpen, onClose }: SidebarProps) => {
   // تسجيل الحالة في الكونسول للتصحيح
   console.log('Sidebar rendered with:', { isMobileOpen, isMobile, location });
 
-  // كود تصحيح مشكلة ظهور السايدبار عند الضغط على زر القائمة
+  // كود تصحيح مشكلة ظهور وإخفاء السايدبار
   useEffect(() => {
     if (isMobileOpen !== prevOpen) {
       setPrevOpen(isMobileOpen);
 
-      // تأكد من تطبيق التغييرات البصرية
+      // تأكد من تطبيق التغييرات البصرية - مع مراعاة اتجاه RTL
       if (sidebarRef.current) {
         if (isMobileOpen) {
           sidebarRef.current.classList.remove('sidebar-hidden');
           sidebarRef.current.classList.add('sidebar-visible');
           
-          // تطبيق نمط عرض فوري
+          // تطبيق نمط عرض فوري (للعربية RTL)
           sidebarRef.current.style.transform = 'translateX(0)';
           document.body.style.overflow = 'hidden'; // منع التمرير في الخلفية
         } else {
@@ -112,13 +114,13 @@ const Sidebar = ({ isMobileOpen, onClose }: SidebarProps) => {
         }}
         aria-hidden={isMobile && !isMobileOpen}
       >
-        {/* زر الإغلاق */}
+        {/* زر الإغلاق - تم تغيير الموضع ليناسب الاتجاه العربي RTL */}
         {isMobile && (
-          <div className="absolute -left-12 top-4">
+          <div className="absolute -right-12 top-4">
             <Button 
               size="icon" 
               variant="ghost" 
-              className="bg-sidebar-accent text-sidebar-accent-foreground rounded-r-none" 
+              className="bg-sidebar-accent text-sidebar-accent-foreground rounded-l-none" 
               onClick={onClose}
             >
               <X className="h-4 w-4" />
